@@ -516,109 +516,62 @@ function hmrAcceptRun(bundle, id) {
 },{}],"edeGs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _pixiJs = require("pixi.js");
-var _didiPng = require("./images/Didi.png");
-var _didiPngDefault = parcelHelpers.interopDefault(_didiPng);
-var _bubblePng = require("./images/bubble.png");
-var _bubblePngDefault = parcelHelpers.interopDefault(_bubblePng);
-var _backgroundPng = require("./images/Background.png");
-var _backgroundPngDefault = parcelHelpers.interopDefault(_backgroundPng);
-class FishGame {
-    //
-    // STAP 1 - maak een pixi canvas
-    //
+var _fish = require("./fish");
+var _bubble = require("./bubble");
+var _leaffPng = require("./images/leaff.png");
+var _leaffPngDefault = parcelHelpers.interopDefault(_leaffPng);
+var _sakuraPng = require("./images/sakura.png");
+var _sakuraPngDefault = parcelHelpers.interopDefault(_sakuraPng);
+var _bgspringPng = require("./images/bgspring.png");
+var _bgspringPngDefault = parcelHelpers.interopDefault(_bgspringPng);
+class Game {
+    fishes = [];
+    bubbles = [];
     constructor(){
-        console.log('I am Pixi');
+        console.log("yjujikuyu");
         this.pixi = new _pixiJs.Application({
             width: 800,
             height: 450
         });
         document.body.appendChild(this.pixi.view);
-        //
-        // STAP 2 - preload alle afbeeldingen
-        //
         this.loader = new _pixiJs.Loader();
-        this.loader.add('didiTexture', _didiPngDefault.default).add('bubbleTexture', _bubblePngDefault.default).add('backgroundTexture', _backgroundPngDefault.default);
+        this.loader.add('fishTexture', _leaffPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default);
         this.loader.load(()=>this.loadCompleted()
         );
     }
-    //
-    // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
-    //
     loadCompleted() {
-        this.background = new _pixiJs.Sprite(this.loader.resources["backgroundTexture"].texture);
-        this.pixi.stage.addChild(this.background);
-        this.didi = new _pixiJs.Sprite(this.loader.resources["didiTexture"].texture);
-        this.didi.x = Math.random() * this.pixi.screen.width;
-        this.didi.y = Math.random() * this.pixi.screen.height;
-        this.didi.anchor.set(0.3);
-        this.didi.tint = Math.random() * 13705769;
-        this.didi.scale.set(0.6);
-        this.pixi.stage.addChild(this.didi);
-        // this.fishes.push(this.fish)
-        this.pixi.ticker.add(()=>this.update()
+        // let background = new PIXI.Sprite(this.loader.resources["waterTexture"].texture!)
+        // background.scale.set(1)
+        // this.pixi.stage.addChild(background)
+        const tilingSprite = new _pixiJs.TilingSprite(this.loader.resources["waterTexture"].texture, this.pixi.screen.width, this.pixi.screen.height);
+        this.pixi.stage.addChild(tilingSprite);
+        let count = 0;
+        this.pixi.ticker.add(()=>{
+            count += 0.005;
+            tilingSprite.tileScale.x = 1;
+            // tilingSprite.tileScale.y = 1 + Math.cos(count);
+            tilingSprite.tilePosition.x += -2;
+        // tilingSprite.tilePosition.y += 0;
+        });
+        for(let i = 0; i < 40; i++){
+            let fish = new _fish.Fish(this.loader.resources["fishTexture"].texture);
+            this.pixi.stage.addChild(fish);
+            this.fishes.push(fish);
+            let bubble = new _bubble.Bubble(this.loader.resources["bubbleTexture"].texture);
+            this.pixi.stage.addChild(bubble);
+            this.fishes.push(bubble);
+        }
+        this.pixi.ticker.add((delta)=>this.update(delta)
         );
-        console.log('Youre images are loaded!');
-        this.bubbleImage = new _pixiJs.Sprite(this.loader.resources["bubbleTexture"].texture);
-        this.bubbleImage.x = Math.random() * this.pixi.screen.width;
-        this.bubbleImage.y = Math.random() * this.pixi.screen.height;
-        this.pixi.stage.addChild(_bubblePngDefault.default);
     }
-    update() {
-        this.didi.x += 1;
-        if (this.didi.x > 900) this.didi.x = 0;
+    update(delta) {
+        for (let fish of this.fishes)fish.swim();
+        for (let bubble of this.bubbles)bubble.swim();
     }
 }
-let MyGame = new FishGame() // let fishes: PIXI.Sprite[] = []
- // let bubbleImage: PIXI.Sprite
- // //
- // // STAP 1 - maak een pixi canvas
- // //
- // const pixi = new PIXI.Application({ width: 800, height: 450 })
- // document.body.appendChild(pixi.view)
- // //
- // // STAP 2 - preload alle afbeeldingen
- // //
- // const loader = new PIXI.Loader()
- // loader.add('fishTexture', fishImage)
- //     .add('bubbleTexture', bubbleImage)
- //     .add('waterTexture', waterImage)
- // loader.load(() => loadCompleted())
- // //
- // // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
- // //
- // function loadCompleted() {
- //     pixi.ticker.add((delta) => update(delta))
- //     console.log('Youre images are loaded!')
- //     let water = new PIXI.Sprite(loader.resources["waterTexture"].texture!)
- //     pixi.stage.addChild(water)
- //     for (let i = 0; i < 100; i++) {
- //         let fish = new PIXI.Sprite(loader.resources["fishTexture"].texture!)
- //         fish.x = Math.random() * pixi.screen.width
- //         fish.y = Math.random() * pixi.screen.height
- //         // fish.rotation = 0.3
- //         fish.anchor.set(0.5)
- //         fish.tint = Math.random() * 0xD12229;
- //         fish.scale.set(0.6)
- //         pixi.stage.addChild(fish)
- //         fishes.push(fish)
- //         let bubbleImage = new PIXI.Sprite(loader.resources["bubbleTexture"].texture!)
- //         bubbleImage.x = 400
- //         bubbleImage.y = 100
- //         pixi.stage.addChild(bubbleImage)
- //     }
- // }
- // function update(delta: number) {
- //     for (let fish of fishes) {
- //         fish.x += 1
- //         // fish.rotation += 0.1
- //         if (fish.x > 900) {
- //             fish.x = 0
- //         }
- //     }
- // }
-;
+let g = new Game();
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/bubble.png":"iMP3P","./images/Background.png":"ahNJD","./images/Didi.png":"6XpLk"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./fish":"7VsCH","./bubble":"iOWvL","./images/leaff.png":"8LJHC","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37115,8 +37068,62 @@ function __extends(d, b) {
     return AnimatedSprite1;
 }(_sprite.Sprite);
 
-},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iMP3P":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bubble.56ab0ad6.png" + "?" + Date.now();
+},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7VsCH":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Fish", ()=>Fish
+);
+var _pixiJs = require("pixi.js");
+class Fish extends _pixiJs.Sprite {
+    constructor(texture){
+        super(texture);
+        console.log("I am a capybarraa");
+        console.log(this);
+        this.speed = Math.random() * 5;
+        this.x = Math.random() * 800;
+        this.y = Math.random() * 600;
+        this.anchor.set(0.5);
+        this.scale.set(Math.random() * 0.09);
+    }
+    swim() {
+        this.x *= 1;
+        this.tint = 16777215;
+        this.rotation -= 0.01;
+        this.x += 2;
+        if (this.x > 900) this.x = -100;
+        this.x -= this.speed;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iOWvL":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Bubble", ()=>Bubble
+);
+var _pixiJs = require("pixi.js");
+class Bubble extends _pixiJs.Sprite {
+    constructor(texture){
+        super(texture);
+        console.log("I am a capybarraa");
+        console.log(this);
+        this.speed = Math.random() * 5;
+        this.x = Math.random() * 800;
+        this.y = Math.random() * 600;
+        this.anchor.set(0.5);
+        this.scale.set(Math.random() * 0.03);
+    }
+    swim() {
+        this.x *= 1;
+        this.tint = 16777215;
+        this.rotation -= 0.01;
+        this.x += 1.5;
+        if (this.x > 900) this.x = -100;
+        this.x -= this.speed;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8LJHC":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "leaff.d8861640.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
 "use strict";
@@ -37152,11 +37159,11 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"ahNJD":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Background.f84d8aa1.png" + "?" + Date.now();
+},{}],"8JSvj":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sakura.920dd15c.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"6XpLk":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Didi.5ba2873e.png" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"aPYeH":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspring.c03f841b.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
