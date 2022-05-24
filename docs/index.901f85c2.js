@@ -519,17 +519,20 @@ var _pixiJs = require("pixi.js");
 var _fish = require("./fish");
 var _bubble = require("./bubble");
 var _player = require("./player");
-var _leaffPng = require("./images/leaff.png");
-var _leaffPngDefault = parcelHelpers.interopDefault(_leaffPng);
+var _lostseedPng = require("./images/lostseed.png");
+var _lostseedPngDefault = parcelHelpers.interopDefault(_lostseedPng);
 var _sakuraPng = require("./images/sakura.png");
 var _sakuraPngDefault = parcelHelpers.interopDefault(_sakuraPng);
 var _bgspringPng = require("./images/bgspring.png");
 var _bgspringPngDefault = parcelHelpers.interopDefault(_bgspringPng);
 var _capeyPng = require("./images/capey.png");
 var _capeyPngDefault = parcelHelpers.interopDefault(_capeyPng);
+var _balladMp3 = require("url:./images/Ballad.mp3");
+var _balladMp3Default = parcelHelpers.interopDefault(_balladMp3);
 class Game {
     fishes = [];
     bubbles = [];
+    score = 0;
     constructor(){
         console.log("yjujikuyu");
         this.pixi = new _pixiJs.Application({
@@ -538,11 +541,13 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add('fishTexture', _leaffPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _capeyPngDefault.default);
+        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _capeyPngDefault.default).add("music", _balladMp3Default.default);
         this.loader.load(()=>this.loadCompleted()
         );
     }
     loadCompleted() {
+        let theme = this.loader.resources["music"].data;
+        theme.play();
         const tilingSprite = new _pixiJs.TilingSprite(this.loader.resources["waterTexture"].texture, this.pixi.screen.width, this.pixi.screen.height);
         this.pixi.stage.addChild(tilingSprite);
         this.player = new _player.Player(this.loader.resources["playerTexture"].texture);
@@ -561,20 +566,32 @@ class Game {
             this.fishes.push(fish);
             let bubble = new _bubble.Bubble(this.loader.resources["bubbleTexture"].texture);
             this.pixi.stage.addChild(bubble);
-            this.fishes.push(bubble);
+            this.bubbles.push(bubble);
         }
         this.pixi.ticker.add((delta)=>this.update(delta)
         );
     }
     update(delta) {
-        for (let fish of this.fishes)fish.swim();
+        for (let fish of this.fishes){
+            fish.swim();
+            if (this.collision(this.player, fish)) {
+                fish.hitCapy();
+                this.score++;
+                console.log(this.score);
+            }
+        }
         for (let bubble of this.bubbles)bubble.swim();
         this.player.update();
+    }
+    collision(sprite1, sprite2) {
+        const bounds1 = sprite1.getBounds();
+        const bounds2 = sprite2.getBounds();
+        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
     }
 }
 let g = new Game();
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./fish":"7VsCH","./bubble":"iOWvL","./images/leaff.png":"8LJHC","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./player":"6OTSH","./images/capey.png":"2giCl"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./fish":"7VsCH","./bubble":"iOWvL","./player":"6OTSH","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/capey.png":"2giCl","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:./images/Ballad.mp3":"mUBjp","./images/lostseed.png":"i5ObV"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37084,15 +37101,18 @@ class Fish extends _pixiJs.Sprite {
         this.x = Math.random() * 800;
         this.y = Math.random() * 600;
         this.anchor.set(0.5);
-        this.scale.set(Math.random() * 0.09);
+        this.scale.set(Math.random() * 1);
     }
     swim() {
         this.x *= 1;
         this.tint = 16777215;
-        this.rotation -= 0.01;
+        this.rotation -= 0.009;
         this.x += 2;
         if (this.x > 1900) this.x = -100;
         this.x -= this.speed;
+    }
+    hitCapy() {
+        this.x = 10000000;
     }
 }
 
@@ -37121,50 +37141,7 @@ class Bubble extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8LJHC":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "leaff.d8861640.png" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
-"use strict";
-var bundleURL = {};
-function getBundleURLCached(id) {
-    var value = bundleURL[id];
-    if (!value) {
-        value = getBundleURL();
-        bundleURL[id] = value;
-    }
-    return value;
-}
-function getBundleURL() {
-    try {
-        throw new Error();
-    } catch (err) {
-        var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
-        if (matches) // The first two stack frames will be this function and getBundleURLCached.
-        // Use the 3rd one, which will be a runtime in the original bundle.
-        return getBaseURL(matches[2]);
-    }
-    return '/';
-}
-function getBaseURL(url) {
-    return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
-} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
-function getOrigin(url) {
-    var matches = ('' + url).match(/(https?|file|ftp):\/\/[^/]+/);
-    if (!matches) throw new Error('Origin not found');
-    return matches[0];
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-exports.getOrigin = getOrigin;
-
-},{}],"8JSvj":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sakura.920dd15c.png" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"aPYeH":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspring.c03f841b.png" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"6OTSH":[function(require,module,exports) {
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6OTSH":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Player", ()=>Player
@@ -37181,7 +37158,7 @@ class Player extends _pixiJs.Sprite {
         );
         this.x = Math.random() * 1200;
         this.y = Math.random() * 400;
-        this.scale.set(0.4);
+        this.scale.set(0.2);
     }
     update() {
         this.x += this.speedx;
@@ -37231,8 +37208,54 @@ class Player extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2giCl":[function(require,module,exports) {
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8JSvj":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sakura.920dd15c.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
+"use strict";
+var bundleURL = {};
+function getBundleURLCached(id) {
+    var value = bundleURL[id];
+    if (!value) {
+        value = getBundleURL();
+        bundleURL[id] = value;
+    }
+    return value;
+}
+function getBundleURL() {
+    try {
+        throw new Error();
+    } catch (err) {
+        var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
+        if (matches) // The first two stack frames will be this function and getBundleURLCached.
+        // Use the 3rd one, which will be a runtime in the original bundle.
+        return getBaseURL(matches[2]);
+    }
+    return '/';
+}
+function getBaseURL(url) {
+    return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
+} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+function getOrigin(url) {
+    var matches = ('' + url).match(/(https?|file|ftp):\/\/[^/]+/);
+    if (!matches) throw new Error('Origin not found');
+    return matches[0];
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+
+},{}],"aPYeH":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspring.c03f841b.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"2giCl":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "capey.2291d64a.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"mUBjp":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad.4b8a368a.mp3" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"i5ObV":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "lostseed.1ecb0028.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
