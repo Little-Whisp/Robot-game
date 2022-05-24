@@ -5,7 +5,7 @@ import { Player } from './player'
 import fishImage from "./images/lostseed.png"
 import bubbleImage from "./images/sakura.png"
 import waterImage from "./images/bgspring.png"
-import playerImage from "./images/capey.png"
+import playerImage from "./images/capeyfren.png"
 import bgMusic from "url:./images/Ballad.mp3" 
 
 class Game {
