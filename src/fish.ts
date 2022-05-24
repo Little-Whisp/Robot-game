@@ -22,5 +22,8 @@ public speed : number
             }
         this.x -= this.speed
     }
+    public hitCapy(){
+        this.x = 10000000
+   }
 }
 

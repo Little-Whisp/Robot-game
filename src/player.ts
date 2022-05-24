@@ -13,7 +13,7 @@ export class Player extends PIXI.Sprite {
         this.x = Math.random() * 1200;
         this.y = Math.random() * 400;
 
-        this.scale.set(0.4)
+        this.scale.set(0.2)
     }
 
     update() {
