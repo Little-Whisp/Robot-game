@@ -1,38 +1,43 @@
 import * as PIXI from 'pixi.js'
 import { Fish } from './fish'
 import { Bubble } from './bubble'
+import { Player } from './player'
 import fishImage from "./images/leaff.png"
 import bubbleImage from "./images/sakura.png"
 import waterImage from "./images/bgspring.png"
+import playerImage from "./images/capey.png"
 
 class Game {
 
-    pixi: PIXI.Application // canvas element in de html file
-    loader: PIXI.Loader
-    fishes: Fish[] = []
-    bubbles: Bubble[] = []
+    private pixi: PIXI.Application // canvas element in de html file
+    private loader: PIXI.Loader
+    private fishes: Fish[] = []
+    private bubbles: Bubble[] = []
+    private player: Player
 
     constructor() {
+
         console.log("yjujikuyu")
-        this.pixi = new PIXI.Application({ width: 800, height: 450 })
+        this.pixi = new PIXI.Application({ width: 1800, height: 450 })
         document.body.appendChild(this.pixi.view)
         this.loader = new PIXI.Loader()
         this.loader.add('fishTexture', fishImage)
             .add('bubbleTexture', bubbleImage)
             .add('waterTexture', waterImage)
+            .add('playerTexture', playerImage)
         this.loader.load(() => this.loadCompleted())
     }
 
-    loadCompleted() {
-        // let background = new PIXI.Sprite(this.loader.resources["waterTexture"].texture!)
-        // background.scale.set(1)
-        // this.pixi.stage.addChild(background)
+    private loadCompleted() {
 
         const tilingSprite = new PIXI.TilingSprite(this.loader.resources["waterTexture"].texture!,
             this.pixi.screen.width,
             this.pixi.screen.height,
         );
         this.pixi.stage.addChild(tilingSprite);
+
+        this.player = new Player(this.loader.resources["playerTexture"].texture!)
+        this.pixi.stage.addChild(this.player)
 
         let count = 0;
 
@@ -60,13 +65,14 @@ class Game {
         this.pixi.ticker.add((delta: number) => this.update(delta))
     }
 
-    update(delta: number) {
+    public update(delta: number) {
         for (let fish of this.fishes) {
             fish.swim()
         }
         for (let bubble of this.bubbles) {
             bubble.swim()
         }
+        this.player.update()
     }
 }
 

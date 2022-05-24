@@ -518,33 +518,35 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _pixiJs = require("pixi.js");
 var _fish = require("./fish");
 var _bubble = require("./bubble");
+var _player = require("./player");
 var _leaffPng = require("./images/leaff.png");
 var _leaffPngDefault = parcelHelpers.interopDefault(_leaffPng);
 var _sakuraPng = require("./images/sakura.png");
 var _sakuraPngDefault = parcelHelpers.interopDefault(_sakuraPng);
 var _bgspringPng = require("./images/bgspring.png");
 var _bgspringPngDefault = parcelHelpers.interopDefault(_bgspringPng);
+var _capeyPng = require("./images/capey.png");
+var _capeyPngDefault = parcelHelpers.interopDefault(_capeyPng);
 class Game {
     fishes = [];
     bubbles = [];
     constructor(){
         console.log("yjujikuyu");
         this.pixi = new _pixiJs.Application({
-            width: 800,
+            width: 1800,
             height: 450
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add('fishTexture', _leaffPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default);
+        this.loader.add('fishTexture', _leaffPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _capeyPngDefault.default);
         this.loader.load(()=>this.loadCompleted()
         );
     }
     loadCompleted() {
-        // let background = new PIXI.Sprite(this.loader.resources["waterTexture"].texture!)
-        // background.scale.set(1)
-        // this.pixi.stage.addChild(background)
         const tilingSprite = new _pixiJs.TilingSprite(this.loader.resources["waterTexture"].texture, this.pixi.screen.width, this.pixi.screen.height);
         this.pixi.stage.addChild(tilingSprite);
+        this.player = new _player.Player(this.loader.resources["playerTexture"].texture);
+        this.pixi.stage.addChild(this.player);
         let count = 0;
         this.pixi.ticker.add(()=>{
             count += 0.005;
@@ -567,11 +569,12 @@ class Game {
     update(delta) {
         for (let fish of this.fishes)fish.swim();
         for (let bubble of this.bubbles)bubble.swim();
+        this.player.update();
     }
 }
 let g = new Game();
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./fish":"7VsCH","./bubble":"iOWvL","./images/leaff.png":"8LJHC","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./fish":"7VsCH","./bubble":"iOWvL","./images/leaff.png":"8LJHC","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./player":"6OTSH","./images/capey.png":"2giCl"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37077,8 +37080,6 @@ var _pixiJs = require("pixi.js");
 class Fish extends _pixiJs.Sprite {
     constructor(texture){
         super(texture);
-        console.log("I am a capybarraa");
-        console.log(this);
         this.speed = Math.random() * 5;
         this.x = Math.random() * 800;
         this.y = Math.random() * 600;
@@ -37090,7 +37091,7 @@ class Fish extends _pixiJs.Sprite {
         this.tint = 16777215;
         this.rotation -= 0.01;
         this.x += 2;
-        if (this.x > 900) this.x = -100;
+        if (this.x > 1900) this.x = -100;
         this.x -= this.speed;
     }
 }
@@ -37104,8 +37105,6 @@ var _pixiJs = require("pixi.js");
 class Bubble extends _pixiJs.Sprite {
     constructor(texture){
         super(texture);
-        console.log("I am a capybarraa");
-        console.log(this);
         this.speed = Math.random() * 5;
         this.x = Math.random() * 800;
         this.y = Math.random() * 600;
@@ -37117,7 +37116,7 @@ class Bubble extends _pixiJs.Sprite {
         this.tint = 16777215;
         this.rotation -= 0.01;
         this.x += 1.5;
-        if (this.x > 900) this.x = -100;
+        if (this.x > 1900) this.x = -100;
         this.x -= this.speed;
     }
 }
@@ -37164,6 +37163,76 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sakura
 
 },{"./helpers/bundle-url":"lgJ39"}],"aPYeH":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspring.c03f841b.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"6OTSH":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Player", ()=>Player
+);
+var _pixiJs = require("pixi.js");
+class Player extends _pixiJs.Sprite {
+    speedx = 0;
+    speedy = 0;
+    constructor(texture){
+        super(texture);
+        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
+        );
+        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
+        );
+        this.x = Math.random() * 1200;
+        this.y = Math.random() * 400;
+        this.scale.set(0.4);
+    }
+    update() {
+        this.x += this.speedx;
+        this.y += this.speedy;
+        if (this.x > 1500) this.x = -100;
+        else if (this.x < -100) this.x = 1500;
+        else if (this.y < -20) {
+            this.x = -100;
+            this.y = 150;
+        }
+    }
+    onKeyDown(e) {
+        switch(e.key.toUpperCase()){
+            case "A":
+            case "ARROWLEFT":
+                this.speedx = -3;
+                break;
+            case "D":
+            case "ARROWRIGHT":
+                this.speedx = 3;
+                break;
+            case "W":
+            case "ARROWUP":
+                this.speedy = -3;
+                break;
+            case "S":
+            case "ARROWDOWN":
+                this.speedy = 3;
+                break;
+        }
+    }
+    onKeyUp(e) {
+        switch(e.key.toUpperCase()){
+            case "A":
+            case "ARROWLEFT":
+            case "D":
+            case "ARROWRIGHT":
+                this.speedx = 0;
+                break;
+            case "W":
+            case "ARROWUP":
+            case "S":
+            case "ARROWDOWN":
+                this.speedy = 0;
+                break;
+        }
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2giCl":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "capey.2291d64a.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 

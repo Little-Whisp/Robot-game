@@ -1,12 +1,10 @@
 import * as PIXI from 'pixi.js'
 
 export class Fish extends PIXI.Sprite {
-speed : number
+public speed : number
 
     constructor(texture: PIXI.Texture) {
         super(texture)
-        console.log("I am a capybarraa")
-        console.log(this)
         this.speed = Math.random() * 5
         this.x = Math.random() * 800
         this.y = Math.random() * 600
@@ -14,12 +12,12 @@ speed : number
         this.scale.set(Math.random() * 0.09)
 
     }
-    swim(){
+   public swim(){
          this.x *= 1
             this.tint = 0xFFFFFF;
             this.rotation -= 0.01
             this.x += 2
-            if (this.x > 900) {
+            if (this.x > 1900) {
                 this.x = -100
             }
         this.x -= this.speed
