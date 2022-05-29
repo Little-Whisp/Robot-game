@@ -1,139 +1,126 @@
 import * as PIXI from 'pixi.js'
+import { Fish } from './fish'
+import { Bubble } from './bubble'
+import { Player } from './player'
+import { Foreground } from "./foreground"
+import fishImage from "./images/lostseed.png"
+import bubbleImage from "./images/sakura.png"
+import waterImage from "./images/bgspring.png"
+import playerImage from "./images/capeyfren.png"
+import foregroundImage from "./images/foreground.png"
+import bgMusic from "url:./images/Ballad.mp3" 
 
-import didiImage from "./images/Didi.png"
-import bubbleImage from "./images/bubble.png"
-import backgroundImage from "./images/Background.png"
-import { LoaderResource } from 'pixi.js'
+class Game {
 
+    private pixi: PIXI.Application // canvas element in de html file
+    private loader: PIXI.Loader
+    private fishes: Fish[] = []
+    private bubbles: Bubble[] = []
+    private player: Player
+    private foreground: Foreground;
+    private score = 0
 
-
-class FishGame {
-    pixi: PIXI.Application
-    loader: PIXI.Loader
-    // fishes: PIXI.Sprite[] = []
-    didi: PIXI.Sprite
-    bubbleImage: PIXI.Sprite
-    background: PIXI.Sprite
-
-    //
-    // STAP 1 - maak een pixi canvas
-    //
     constructor() {
-        console.log('I am Pixi')
-        this.pixi = new PIXI.Application({ width: 800, height: 450 })
-        document.body.appendChild(this.pixi.view)
 
-        //
-        // STAP 2 - preload alle afbeeldingen
-        //
+        console.log("yjujikuyu")
+        this.pixi = new PIXI.Application({ width: 1800, height: 450 })
+        document.body.appendChild(this.pixi.view)
         this.loader = new PIXI.Loader()
-        this.loader.add('didiTexture', didiImage)
+        this.loader.add('fishTexture', fishImage)
             .add('bubbleTexture', bubbleImage)
-            .add('backgroundTexture', backgroundImage)
+            .add('waterTexture', waterImage)
+            .add('playerTexture', playerImage)
+            .add('foreground', foregroundImage)
+            .add("music", bgMusic)
         this.loader.load(() => this.loadCompleted())
     }
 
-    //
-    // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
-    //
+    private loadCompleted() {
 
-    loadCompleted() {
+        let theme = this.loader.resources["music"].data!
+        theme.play()
 
-        this.background = new PIXI.Sprite(this.loader.resources["backgroundTexture"].texture!)
-        this.pixi.stage.addChild(this.background)
+        const tilingSprite = new PIXI.TilingSprite(this.loader.resources["waterTexture"].texture!,
+            this.pixi.screen.width,
+            this.pixi.screen.height,
+        );
+        this.pixi.stage.addChild(tilingSprite);
 
-        this.didi = new PIXI.Sprite(this.loader.resources["didiTexture"].texture!)
-        this.didi.x = 20 * this.pixi.screen.width
-        this.didi.y = 30 * this.pixi.screen.height
-        this.didi.anchor.set(0.3)
-        this.didi.tint = Math.random() * 0xD12229;
-        this.didi.scale.set(0.6)
+        this.player = new Player(this.loader.resources["playerTexture"].texture!)
+        this.pixi.stage.addChild(this.player)
 
-        this.pixi.stage.addChild(this.didi)
-        // this.fishes.push(this.fish)
-
-        this.pixi.ticker.add(() => this.update())
-        console.log('Youre images are loaded!')
-
-        this.bubbleImage = new PIXI.Sprite(this.loader.resources["bubbleTexture"].texture!)
-        this.bubbleImage.x = Math.random() * this.pixi.screen.width
-        this.bubbleImage.y = Math.random() * this.pixi.screen.height
-        this.pixi.stage.addChild(bubbleImage)
-
+        let count = 0;
 
         
 
-    }
+        this.pixi.ticker.add(() => {
+            count += 0.005;
 
-    update() {
-        this.didi.x += 1
-        if (this.didi.x > 900) {
-            this.didi.x = 0
+            tilingSprite.tileScale.x = 1;
+            // tilingSprite.tileScale.y = 1 + Math.cos(count);
+
+            tilingSprite.tilePosition.x += -2;
+            // tilingSprite.tilePosition.y += 0;
+        })
+
+        for (let i = 0; i < 40; i++) {
+            let fish = new Fish(this.loader.resources["fishTexture"].texture!)
+
+            this.pixi.stage.addChild(fish)
+            this.fishes.push(fish)
+
+            let bubble = new Bubble(this.loader.resources["bubbleTexture"].texture!)
+
+            this.pixi.stage.addChild(bubble)
+            this.bubbles.push(bubble)
         }
+
+        this.foreground = new Foreground(this.loader.resources["foreground"].texture!)
+        this.pixi.stage.addChild(this.foreground)
+
+        this.pixi.ticker.add((delta: number) => this.update(delta))
     }
 
+    public update(delta: number) {
+        for (let fish of this.fishes) {
+            fish.swim()
+            if(this.collision(this.player, fish)){
+                fish.hitCapy()
+                this.score++
+                console.log(this.score)
+            }
+        }
+        for (let bubble of this.bubbles) {
+            bubble.swim()
+        }
+
+        if (this.groundCollision(this.player, this.foreground)) {
+            this.player.y = 280;
+            }
+
+        this.player.update()
+    }
+
+    groundCollision(player: PIXI.Sprite, ground: PIXI.Sprite) {
+        const bounds1 = player.getBounds()
+        const bounds2 = this.foreground.getBounds()
+
+        return bounds1.x < bounds2.x + bounds2.width
+            && bounds1.x + bounds1.width > bounds2.x
+            && bounds1.y < bounds2.y + bounds2.height
+            && bounds1.y + bounds1.height > bounds2.y;
+    }
+
+    collision(sprite1:PIXI.Sprite, sprite2:PIXI.Sprite) {
+        const bounds1 = sprite1.getBounds()
+        const bounds2 = sprite2.getBounds()
+
+        return bounds1.x < bounds2.x + bounds2.width
+            && bounds1.x + bounds1.width > bounds2.x
+            && bounds1.y < bounds2.y + bounds2.height
+            && bounds1.y + bounds1.height > bounds2.y;
+    }
 }
 
-let MyGame = new FishGame()
 
-// let fishes: PIXI.Sprite[] = []
-// let bubbleImage: PIXI.Sprite
-
-// //
-// // STAP 1 - maak een pixi canvas
-// //
-// const pixi = new PIXI.Application({ width: 800, height: 450 })
-// document.body.appendChild(pixi.view)
-
-// //
-// // STAP 2 - preload alle afbeeldingen
-// //
-// const loader = new PIXI.Loader()
-// loader.add('fishTexture', fishImage)
-//     .add('bubbleTexture', bubbleImage)
-//     .add('waterTexture', waterImage)
-// loader.load(() => loadCompleted())
-
-// //
-// // STAP 3 - maak een sprite als de afbeeldingen zijn geladen
-// //
-// function loadCompleted() {
-
-//     pixi.ticker.add((delta) => update(delta))
-//     console.log('Youre images are loaded!')
-
-//     let water = new PIXI.Sprite(loader.resources["waterTexture"].texture!)
-//     pixi.stage.addChild(water)
-
-//     for (let i = 0; i < 100; i++) {
-//         let fish = new PIXI.Sprite(loader.resources["fishTexture"].texture!)
-//         fish.x = Math.random() * pixi.screen.width
-//         fish.y = Math.random() * pixi.screen.height
-//         // fish.rotation = 0.3
-//         fish.anchor.set(0.5)
-//         fish.tint = Math.random() * 0xD12229;
-//         fish.scale.set(0.6)
-
-//         pixi.stage.addChild(fish)
-//         fishes.push(fish)
-
-
-//         let bubbleImage = new PIXI.Sprite(loader.resources["bubbleTexture"].texture!)
-//         bubbleImage.x = 400
-//         bubbleImage.y = 100
-//         pixi.stage.addChild(bubbleImage)
-//     }
-
-// }
-
-
-// function update(delta: number) {
-//     for (let fish of fishes) {
-//         fish.x += 1
-//         // fish.rotation += 0.1
-//         if (fish.x > 900) {
-//             fish.x = 0
-//         }
-//     }
-
-// }
+let g = new Game()
