@@ -1,26 +1,24 @@
-
-import * as PIXI from "pixi.js"
+import * as PIXI from "pixi.js";
+import Matter from "matter-js";
+import { Game } from "./game";
 
 export class Foreground extends PIXI.Sprite {
+  private rigidBody: Matter.Body;
 
+  constructor(texture: PIXI.Texture, game: Game) {
+    super(texture);
+    this.x = 100;
+    this.y = 100;
+    this.anchor.set(0.5);
+    this.width = 20000
+    this.height = 200
 
-    constructor(texture: PIXI.Texture) {
-        super(texture)
+    this.rigidBody = Matter.Bodies.rectangle(-500, 500, 9000, 200, {
+      isStatic: true
+    });
+    Matter.Composite.add(game.engine.world, this.rigidBody);
 
-        this.width = 2400;
-        this.height = 450;
-
-        this.x = 0;
-        this.y = 400;
-
-        // let area = this.getBounds()
-        // let greenbox = new PIXI.Graphics()
-        // greenbox.lineStyle(2, 0x33FF33, 1)
-        // greenbox.drawRect(0, 0, area.width, area.height)
-        // this.addChild(greenbox)
-    }
-
-    update(delta: number) {
-
-    }
+    this.x = this.rigidBody.position.x;
+    this.y = this.rigidBody.position.y;
+  }
 }
