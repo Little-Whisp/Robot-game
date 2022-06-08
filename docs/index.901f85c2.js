@@ -45030,7 +45030,7 @@ class Player extends _pixiJs.Sprite {
         });
     }
     onKeyDown(e) {
-        if (e.key === " " || e.key === "ArrowUp") {
+        if (e.key === " " || e.key === "ARROWUP" || e.key === "W") {
             if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJsDefault.default.Body.applyForce(this.rigidBody, {
                 x: this.rigidBody.position.x,
                 y: this.rigidBody.position.y
@@ -45041,11 +45041,13 @@ class Player extends _pixiJs.Sprite {
         // this.jumpSound.play()
         }
         switch(e.key){
-            case "ArrowLeft":
+            case "A":
+            case "ARROWLEFT":
                 this.speed = -5;
                 this.scale.set(-0.2, 0.2);
                 break;
-            case "ArrowRight":
+            case "D":
+            case "ARROWRIGHT":
                 this.speed = 5;
                 this.scale.set(0.2, 0.2);
                 break;
@@ -45053,8 +45055,10 @@ class Player extends _pixiJs.Sprite {
     }
     onKeyUp(e) {
         switch(e.key){
-            case "ArrowLeft":
-            case "ArrowRight":
+            case "A":
+            case "D":
+            case "ARROWLEFT":
+            case "ARROWRIGHT":
                 this.speed = 0;
                 break;
         }

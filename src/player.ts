@@ -65,18 +65,20 @@ export class Player extends PIXI.Sprite {
     }
 
     onKeyDown(e: KeyboardEvent) {
-        if (e.key === " " || e.key === "ArrowUp") {
+        if (e.key === " " || e.key === "ARROWUP" || e.key === "W") {
             if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {
                 Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: -0.25 })
                 // this.jumpSound.play()
             }
         }
         switch (e.key) {
-            case "ArrowLeft":
+            case "A":
+            case "ARROWLEFT":
                 this.speed = -5
                 this.scale.set(-0.2, 0.2)
                 break
-            case "ArrowRight":
+            case "D":
+            case "ARROWRIGHT":
                 this.speed = 5
                 this.scale.set(0.2, 0.2)
                 break
@@ -85,8 +87,10 @@ export class Player extends PIXI.Sprite {
 
     onKeyUp(e: KeyboardEvent) {
         switch (e.key) {
-            case "ArrowLeft":
-            case "ArrowRight":
+            case "A":
+            case "D":
+            case "ARROWLEFT":
+            case "ARROWRIGHT":
                 this.speed = 0
                 break
         }
