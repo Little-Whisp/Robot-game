@@ -29,6 +29,7 @@ export class Game {
     private spiders: Spider[] = []
     private player: Player
     private spider: Spider
+    private gameOverButton : PIXI.Sprite
     private foreground: Foreground;
     private score = 0
 
@@ -99,6 +100,30 @@ export class Game {
         this.pixi.ticker.add((delta: number) => this.update(delta))
     }
 
+    private gameOver(){
+        console.log("game over")
+        this.pixi.stop()
+        this.gameOverButton = new PIXI.Sprite(PIXI.Texture.WHITE) // jouw eigen sprite hier
+        this.gameOverButton.width = 100
+        this.gameOverButton.height = 50
+        this.gameOverButton.x = 400
+        this.gameOverButton.y = 200
+        this.gameOverButton.interactive = true
+        this.gameOverButton.buttonMode = true
+        this.gameOverButton.on('pointerdown', () => this.resetGame())
+
+        this.pixi.stage.addChild(this.gameOverButton)
+    }
+
+    private resetGame(){
+        this.player.x = 100;
+        this.player.y = 100;
+        // verwijder de game over button
+        this.gameOverButton.destroy() 
+        // herstart pixi
+        this.pixi.start()
+    }
+
     public update(delta: number) {
         Matter.Engine.update(this.engine, 1000 / 60)
 
@@ -108,6 +133,11 @@ export class Game {
                 seed.hitCapy()
                 this.score++
                 console.log(this.score)
+            }
+        }
+        for (let spider of this.spiders) {
+            if(this.collision(this.player, spider)){
+                this.gameOver()
             }
         }
         for (let bubble of this.bubbles) {

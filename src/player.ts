@@ -16,10 +16,10 @@ export class Player extends PIXI.Sprite {
         window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
         window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
-        this.x =  100;
-        this.y =  340;
+        this.x = 100;
+        this.y = 100;
 
-        this.scale.set(0.2, 0.2)
+        this.scale.set(0.2)
 
         const playerOptions: Matter.IBodyDefinition = {
             density: 0.001,
@@ -44,53 +44,47 @@ export class Player extends PIXI.Sprite {
     update() {
         if (this.speed != 0) {
             Matter.Body.setVelocity(this.rigidBody, { x: this.speed, y: this.rigidBody.velocity.y })
-        if (this.x > 1500) {
-            this.x = 0;
-            // this.jumpSound.play()
-        } else if (this.x < -100) {
-            this.x = 1500
-        } else if (this.y < -20) {
-            this.x = -100;
-            this.y =  250;
-        }
-        this.x = this.rigidBody.position.x
-        this.y = this.rigidBody.position.y
-        this.rotation = this.rigidBody.angle
+            if (this.x > 1500) {
+                this.x = 0;
+                // this.jumpSound.play()
+            } else if (this.x < -100) {
+                this.x = 1500
+            } else if (this.y < -20) {
+                this.x = -100;
+                this.y = 250;
+            }
+            this.x = this.rigidBody.position.x
+            this.y = this.rigidBody.position.y
+            this.rotation = this.rigidBody.angle
 
-        if (this.rigidBody.position.y > 1500) this.resetPosition()
+            if (this.rigidBody.position.y > 1500) this.resetPosition()
         } else if (this.speed == 0) {
             Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
         }
-        
+
     }
 
     onKeyDown(e: KeyboardEvent) {
-        if (e.key === " " || e.key === "ARROWUP" || e.key === "W") {
+        if (e.key === " " || e.key === "ArrowUp") {
             if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {
                 Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: -0.25 })
                 // this.jumpSound.play()
             }
         }
         switch (e.key) {
-            case "A":
-            case "ARROWLEFT":
+            case "ArrowLeft":
                 this.speed = -5
-                this.scale.set(-0.2, 0.2)
                 break
-            case "D":
-            case "ARROWRIGHT":
+            case "ArrowRight":
                 this.speed = 5
-                this.scale.set(0.2, 0.2)
                 break
         }
     }
 
     onKeyUp(e: KeyboardEvent) {
         switch (e.key) {
-            case "A":
-            case "D":
-            case "ARROWLEFT":
-            case "ARROWRIGHT":
+            case "ArrowLeft":
+            case "ArrowRight":
                 this.speed = 0
                 break
         }
