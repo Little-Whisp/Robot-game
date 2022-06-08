@@ -19,7 +19,7 @@ export class Player extends PIXI.Sprite {
         this.x =  100;
         this.y =  340;
 
-        this.scale.set(0.2)
+        this.scale.set(0.2, 0.2)
 
         const playerOptions: Matter.IBodyDefinition = {
             density: 0.001,
@@ -74,9 +74,11 @@ export class Player extends PIXI.Sprite {
         switch (e.key) {
             case "ArrowLeft":
                 this.speed = -5
+                this.scale.set(-0.2, 0.2)
                 break
             case "ArrowRight":
                 this.speed = 5
+                this.scale.set(0.2, 0.2)
                 break
         }
     }

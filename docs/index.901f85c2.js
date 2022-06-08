@@ -44989,7 +44989,7 @@ class Player extends _pixiJs.Sprite {
         );
         this.x = 100;
         this.y = 340;
-        this.scale.set(0.2);
+        this.scale.set(0.2, 0.2);
         const playerOptions = {
             density: 0.001,
             friction: 0.7,
@@ -45043,9 +45043,11 @@ class Player extends _pixiJs.Sprite {
         switch(e.key){
             case "ArrowLeft":
                 this.speed = -5;
+                this.scale.set(-0.2, 0.2);
                 break;
             case "ArrowRight":
                 this.speed = 5;
+                this.scale.set(0.2, 0.2);
                 break;
         }
     }
