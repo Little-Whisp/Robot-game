@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js'
 import Matter from 'matter-js'
 
 //import classes
-import { Fish } from './fish'
+import { Seed } from './seed'
 import { Bubble } from './bubble'
 import { Player } from './player'
 import { Foreground } from "./foreground"
@@ -22,7 +22,7 @@ import jumpSoundFile from "url:./images/vine-boom.mp3"
 export class Game {
     public pixi: PIXI.Application // canvas element in de html file
     private loader: PIXI.Loader
-    private fishes: Fish[] = []
+    private seeds: Seed[] = []
     private bubbles: Bubble[] = []
     private player: Player
     private foreground: Foreground;
@@ -75,9 +75,9 @@ export class Game {
         })
 
         for (let i = 0; i < 40; i++) {
-            let fish = new Fish(this.loader.resources["fishTexture"].texture!)
-            this.pixi.stage.addChild(fish)
-            this.fishes.push(fish)
+            let seed = new Seed(this.loader.resources["fishTexture"].texture!)
+            this.pixi.stage.addChild(seed)
+            this.seeds.push(seed)
 
             let bubble = new Bubble(this.loader.resources["bubbleTexture"].texture!)
             this.pixi.stage.addChild(bubble)
@@ -93,10 +93,10 @@ export class Game {
     public update(delta: number) {
         Matter.Engine.update(this.engine, 1000 / 60)
 
-        for (let fish of this.fishes) {
-            fish.swim()
-            if(this.collision(this.player, fish)){
-                fish.hitCapy()
+        for (let seed of this.seeds) {
+            seed.fly()
+            if(this.collision(this.player, seed)){
+                seed.hitCapy()
                 this.score++
                 console.log(this.score)
             }

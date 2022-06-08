@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 
-export class Fish extends PIXI.Sprite {
+export class Seed extends PIXI.Sprite {
 public speed : number
 
     constructor(texture: PIXI.Texture) {
@@ -12,7 +12,7 @@ public speed : number
         this.scale.set(Math.random() * 1)
 
     }
-   public swim(){
+   public fly(){
          this.x *= 1
             this.tint = 0xFFFFFF;
             this.rotation -= 0.009

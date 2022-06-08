@@ -523,7 +523,7 @@ var _pixiJs = require("pixi.js");
 var _matterJs = require("matter-js");
 var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
 //import classes
-var _fish = require("./fish");
+var _seed = require("./seed");
 var _bubble = require("./bubble");
 var _player = require("./player");
 var _foreground = require("./foreground");
@@ -544,7 +544,7 @@ var _balladMp3Default = parcelHelpers.interopDefault(_balladMp3);
 var _vineBoomMp3 = require("url:./images/vine-boom.mp3");
 var _vineBoomMp3Default = parcelHelpers.interopDefault(_vineBoomMp3);
 class Game {
-    fishes = [];
+    seeds = [];
     bubbles = [];
     score = 0;
     constructor(){
@@ -576,9 +576,9 @@ class Game {
         // tilingSprite.tilePosition.y += 0;
         });
         for(let i = 0; i < 40; i++){
-            let fish = new _fish.Fish(this.loader.resources["fishTexture"].texture);
-            this.pixi.stage.addChild(fish);
-            this.fishes.push(fish);
+            let seed = new _seed.Seed(this.loader.resources["fishTexture"].texture);
+            this.pixi.stage.addChild(seed);
+            this.seeds.push(seed);
             let bubble = new _bubble.Bubble(this.loader.resources["bubbleTexture"].texture);
             this.pixi.stage.addChild(bubble);
             this.bubbles.push(bubble);
@@ -590,10 +590,10 @@ class Game {
     }
     update(delta) {
         _matterJsDefault.default.Engine.update(this.engine, 1000 / 60);
-        for (let fish of this.fishes){
-            fish.swim();
-            if (this.collision(this.player, fish)) {
-                fish.hitCapy();
+        for (let seed of this.seeds){
+            seed.fly();
+            if (this.collision(this.player, seed)) {
+                seed.hitCapy();
                 this.score++;
                 console.log(this.score);
             }
@@ -609,7 +609,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./fish":"7VsCH","./bubble":"iOWvL","./player":"6OTSH","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/didi_sprite.png":"6teKZ"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./bubble":"iOWvL","./player":"6OTSH","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/didi_sprite.png":"6teKZ","./seed":"iu1lN"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -44908,35 +44908,7 @@ var global = arguments[3];
     ]);
 });
 
-},{}],"7VsCH":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Fish", ()=>Fish
-);
-var _pixiJs = require("pixi.js");
-class Fish extends _pixiJs.Sprite {
-    constructor(texture){
-        super(texture);
-        this.speed = Math.random() * 5;
-        this.x = Math.random() * 800;
-        this.y = Math.random() * 600;
-        this.anchor.set(0.5);
-        this.scale.set(Math.random() * 1);
-    }
-    swim() {
-        this.x *= 1;
-        this.tint = 16777215;
-        this.rotation -= 0.009;
-        this.x += 2;
-        if (this.x > 1900) this.x = -100;
-        this.x -= this.speed;
-    }
-    hitCapy() {
-        this.x = 10000000;
-    }
-}
-
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iOWvL":[function(require,module,exports) {
+},{}],"iOWvL":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Bubble", ()=>Bubble
@@ -45144,6 +45116,34 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-b
 },{"./helpers/bundle-url":"lgJ39"}],"6teKZ":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "didi_sprite.98bad492.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}],"iu1lN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Seed", ()=>Seed
+);
+var _pixiJs = require("pixi.js");
+class Seed extends _pixiJs.Sprite {
+    constructor(texture){
+        super(texture);
+        this.speed = Math.random() * 5;
+        this.x = Math.random() * 800;
+        this.y = Math.random() * 600;
+        this.anchor.set(0.5);
+        this.scale.set(Math.random() * 1);
+    }
+    fly() {
+        this.x *= 1;
+        this.tint = 16777215;
+        this.rotation -= 0.009;
+        this.x += 2;
+        if (this.x > 1900) this.x = -100;
+        this.x -= this.speed;
+    }
+    hitCapy() {
+        this.x = 10000000;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.901f85c2.js.map
