@@ -6,10 +6,12 @@ import Matter from 'matter-js'
 import { Seed } from './seed'
 import { Bubble } from './bubble'
 import { Player } from './player'
+import { Spider } from './spider'
 import { Foreground } from "./foreground"
 
 //import images
 import fishImage from "./images/lostseed.png"
+import spiderImage from "./images/spider.png"
 import bubbleImage from "./images/sakura.png"
 import waterImage from "./images/bgspring.png"
 import playerImage from "./images/didi_sprite.png"
@@ -24,7 +26,9 @@ export class Game {
     private loader: PIXI.Loader
     private seeds: Seed[] = []
     private bubbles: Bubble[] = []
+    private spiders: Spider[] = []
     private player: Player
+    private spider: Spider
     private foreground: Foreground;
     private score = 0
 
@@ -37,6 +41,7 @@ export class Game {
         this.loader = new PIXI.Loader()
         this.loader.add('fishTexture', fishImage)
             .add('bubbleTexture', bubbleImage)
+            .add('spiderTexture', spiderImage)
             .add('waterTexture', waterImage)
             .add('playerTexture', playerImage)
             .add('foreground', foregroundImage)
@@ -86,6 +91,10 @@ export class Game {
 
         this.foreground = new Foreground(this.loader.resources["foreground"].texture!, this)
         this.pixi.stage.addChild(this.foreground)
+
+        let spider = new Spider(this.loader.resources["spiderTexture"].texture!, this)
+        this.pixi.stage.addChild(spider)
+        this.spiders.push(spider)
 
         this.pixi.ticker.add((delta: number) => this.update(delta))
     }

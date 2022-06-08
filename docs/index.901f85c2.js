@@ -526,10 +526,13 @@ var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
 var _seed = require("./seed");
 var _bubble = require("./bubble");
 var _player = require("./player");
+var _spider = require("./spider");
 var _foreground = require("./foreground");
 //import images
 var _lostseedPng = require("./images/lostseed.png");
 var _lostseedPngDefault = parcelHelpers.interopDefault(_lostseedPng);
+var _spiderPng = require("./images/spider.png");
+var _spiderPngDefault = parcelHelpers.interopDefault(_spiderPng);
 var _sakuraPng = require("./images/sakura.png");
 var _sakuraPngDefault = parcelHelpers.interopDefault(_sakuraPng);
 var _bgspringPng = require("./images/bgspring.png");
@@ -546,6 +549,7 @@ var _vineBoomMp3Default = parcelHelpers.interopDefault(_vineBoomMp3);
 class Game {
     seeds = [];
     bubbles = [];
+    spiders = [];
     score = 0;
     constructor(){
         this.pixi = new _pixiJs.Application({
@@ -554,7 +558,7 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('foreground', _foregroundPngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
+        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('spiderTexture', _spiderPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('foreground', _foregroundPngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
         this.loader.load(()=>this.loadCompleted()
         );
         this.engine = _matterJsDefault.default.Engine.create();
@@ -585,6 +589,9 @@ class Game {
         }
         this.foreground = new _foreground.Foreground(this.loader.resources["foreground"].texture, this);
         this.pixi.stage.addChild(this.foreground);
+        let spider = new _spider.Spider(this.loader.resources["spiderTexture"].texture, this);
+        this.pixi.stage.addChild(spider);
+        this.spiders.push(spider);
         this.pixi.ticker.add((delta)=>this.update(delta)
         );
     }
@@ -609,7 +616,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./bubble":"iOWvL","./player":"6OTSH","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/didi_sprite.png":"6teKZ","./seed":"iu1lN"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -44908,7 +44915,35 @@ var global = arguments[3];
     ]);
 });
 
-},{}],"iOWvL":[function(require,module,exports) {
+},{}],"iu1lN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Seed", ()=>Seed
+);
+var _pixiJs = require("pixi.js");
+class Seed extends _pixiJs.Sprite {
+    constructor(texture){
+        super(texture);
+        this.speed = Math.random() * 5;
+        this.x = Math.random() * 800;
+        this.y = Math.random() * 600;
+        this.anchor.set(0.5);
+        this.scale.set(Math.random() * 1);
+    }
+    fly() {
+        this.x *= 1;
+        this.tint = 16777215;
+        this.rotation -= 0.009;
+        this.x += 2;
+        if (this.x > 1900) this.x = -100;
+        this.x -= this.speed;
+    }
+    hitCapy() {
+        this.x = 10000000;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iOWvL":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Bubble", ()=>Bubble
@@ -44953,7 +44988,7 @@ class Player extends _pixiJs.Sprite {
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
         this.x = 100;
-        this.y = 100;
+        this.y = 340;
         this.scale.set(0.2);
         const playerOptions = {
             density: 0.001,
@@ -44964,6 +44999,109 @@ class Player extends _pixiJs.Sprite {
             inertia: Infinity,
             inverseInertia: Infinity,
             label: "Player"
+        };
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
+        );
+        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
+        );
+    // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
+    }
+    update() {
+        if (this.speed != 0) {
+            _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
+                x: this.speed,
+                y: this.rigidBody.velocity.y
+            });
+            if (this.x > 1500) this.x = 0;
+            else if (this.x < -100) this.x = 1500;
+            else if (this.y < -20) {
+                this.x = -100;
+                this.y = 250;
+            }
+            this.x = this.rigidBody.position.x;
+            this.y = this.rigidBody.position.y;
+            this.rotation = this.rigidBody.angle;
+            if (this.rigidBody.position.y > 1500) this.resetPosition();
+        } else if (this.speed == 0) _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
+            x: 0,
+            y: 4
+        });
+    }
+    onKeyDown(e) {
+        if (e.key === " " || e.key === "ArrowUp") {
+            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJsDefault.default.Body.applyForce(this.rigidBody, {
+                x: this.rigidBody.position.x,
+                y: this.rigidBody.position.y
+            }, {
+                x: 0,
+                y: -0.25
+            });
+        // this.jumpSound.play()
+        }
+        switch(e.key){
+            case "ArrowLeft":
+                this.speed = -5;
+                break;
+            case "ArrowRight":
+                this.speed = 5;
+                break;
+        }
+    }
+    onKeyUp(e) {
+        switch(e.key){
+            case "ArrowLeft":
+            case "ArrowRight":
+                this.speed = 0;
+                break;
+        }
+    }
+    resetPosition() {
+        _matterJsDefault.default.Body.setPosition(this.rigidBody, {
+            x: 120,
+            y: 30
+        });
+        _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
+            x: 0,
+            y: 0
+        });
+        _matterJsDefault.default.Body.setAngularVelocity(this.rigidBody, 0);
+    }
+    beforeUnload() {}
+}
+
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lt4qm":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Spider", ()=>Spider
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Spider extends _pixiJs.Sprite {
+    // jumpSound:HTMLAudioElement
+    speed = 0;
+    constructor(texture, game){
+        super(texture);
+        this.game = game;
+        this.anchor.set(0.5);
+        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
+        );
+        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
+        );
+        this.x = 600;
+        this.y = 368;
+        this.scale.set(0.2);
+        const playerOptions = {
+            density: 0.001,
+            friction: 0.7,
+            frictionStatic: 0,
+            frictionAir: 0.01,
+            restitution: 0.5,
+            inertia: Infinity,
+            inverseInertia: Infinity,
+            label: "Enemy"
         };
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
@@ -45098,11 +45236,17 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"8JSvj":[function(require,module,exports) {
+},{}],"ceHb0":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "spider.d316874d.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"8JSvj":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sakura.920dd15c.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"aPYeH":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspring.c03f841b.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"6teKZ":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "didi_sprite.98bad492.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"6TC8P":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "foreground.725088f5.png" + "?" + Date.now();
@@ -45113,37 +45257,6 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad
 },{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"6teKZ":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "didi_sprite.98bad492.png" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"iu1lN":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Seed", ()=>Seed
-);
-var _pixiJs = require("pixi.js");
-class Seed extends _pixiJs.Sprite {
-    constructor(texture){
-        super(texture);
-        this.speed = Math.random() * 5;
-        this.x = Math.random() * 800;
-        this.y = Math.random() * 600;
-        this.anchor.set(0.5);
-        this.scale.set(Math.random() * 1);
-    }
-    fly() {
-        this.x *= 1;
-        this.tint = 16777215;
-        this.rotation -= 0.009;
-        this.x += 2;
-        if (this.x > 1900) this.x = -100;
-        this.x -= this.speed;
-    }
-    hitCapy() {
-        this.x = 10000000;
-    }
-}
-
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.901f85c2.js.map

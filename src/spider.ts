@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js"
 import { Game } from "./Game"
 import Matter from 'matter-js'
 
-export class Player extends PIXI.Sprite {
+export class Spider extends PIXI.Sprite {
     rigidBody: Matter.Body
     // jumpSound:HTMLAudioElement
     speed: number = 0
@@ -16,8 +16,8 @@ export class Player extends PIXI.Sprite {
         window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
         window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
-        this.x =  100;
-        this.y =  340;
+        this.x =  600;
+        this.y =  368;
 
         this.scale.set(0.2)
 
@@ -29,7 +29,7 @@ export class Player extends PIXI.Sprite {
             restitution: 0.5,
             inertia: Infinity,
             inverseInertia: Infinity,
-            label: "Player"
+            label: "Enemy"
         }
         this.rigidBody = Matter.Bodies.rectangle(600, 230, 75, 100, playerOptions)
         Matter.Composite.add(game.engine.world, this.rigidBody)
