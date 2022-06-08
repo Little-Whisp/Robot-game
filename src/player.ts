@@ -17,7 +17,7 @@ export class Player extends PIXI.Sprite {
         window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
         this.x = 100;
-        this.y = 100;
+        this.y = 345;
 
         this.scale.set(0.2)
 

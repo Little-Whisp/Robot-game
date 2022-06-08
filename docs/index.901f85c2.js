@@ -612,7 +612,7 @@ class Game {
     }
     resetGame() {
         this.player.x = 100;
-        this.player.y = 100;
+        this.player.y = 345;
         // verwijder de game over button
         this.gameOverButton.destroy();
         // herstart pixi
@@ -620,13 +620,10 @@ class Game {
     }
     update(delta) {
         _matterJsDefault.default.Engine.update(this.engine, 1000 / 60);
-        for (let seed of this.seeds){
-            seed.fly();
-            if (this.collision(this.player, seed)) {
-                seed.hitCapy();
-                this.score++;
-                console.log(this.score);
-            }
+        for (let seed of this.seeds)if (this.collision(this.player, seed)) {
+            seed.hitCapy();
+            this.score++;
+            console.log(this.score);
         }
         for (let spider of this.spiders)if (this.collision(this.player, spider)) this.gameOver();
         for (let bubble of this.bubbles)bubble.swim();
@@ -44984,7 +44981,7 @@ class Player extends _pixiJs.Sprite {
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
         this.x = 100;
-        this.y = 100;
+        this.y = 345;
         this.scale.set(0.2);
         const playerOptions = {
             density: 0.001,
@@ -45157,8 +45154,8 @@ class Seed extends _pixiJs.Sprite {
     constructor(texture){
         super(texture);
         this.speed = Math.random() * 5;
-        this.x = Math.random() * 800;
-        this.y = Math.random() * 600;
+        this.x = 1200;
+        this.y = 300;
         this.anchor.set(0.5);
         this.scale.set(Math.random() * 1);
     }
@@ -45194,7 +45191,7 @@ class Spider extends _pixiJs.Sprite {
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
-        this.x = 600;
+        this.x = 900;
         this.y = 368;
         this.scale.set(0.2);
         const playerOptions = {

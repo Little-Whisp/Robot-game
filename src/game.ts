@@ -117,7 +117,7 @@ export class Game {
 
     private resetGame(){
         this.player.x = 100;
-        this.player.y = 100;
+        this.player.y = 345;
         // verwijder de game over button
         this.gameOverButton.destroy() 
         // herstart pixi
@@ -128,7 +128,6 @@ export class Game {
         Matter.Engine.update(this.engine, 1000 / 60)
 
         for (let seed of this.seeds) {
-            seed.fly()
             if(this.collision(this.player, seed)){
                 seed.hitCapy()
                 this.score++

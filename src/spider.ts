@@ -16,7 +16,7 @@ export class Spider extends PIXI.Sprite {
         window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
         window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
-        this.x =  600;
+        this.x =  900;
         this.y =  368;
 
         this.scale.set(0.2)
