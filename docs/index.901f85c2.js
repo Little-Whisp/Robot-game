@@ -534,8 +534,8 @@ var _sakuraPng = require("./images/sakura.png");
 var _sakuraPngDefault = parcelHelpers.interopDefault(_sakuraPng);
 var _bgspringPng = require("./images/bgspring.png");
 var _bgspringPngDefault = parcelHelpers.interopDefault(_bgspringPng);
-var _capeyfrenPng = require("./images/capeyfren.png");
-var _capeyfrenPngDefault = parcelHelpers.interopDefault(_capeyfrenPng);
+var _didiSpritePng = require("./images/didi_sprite.png");
+var _didiSpritePngDefault = parcelHelpers.interopDefault(_didiSpritePng);
 var _foregroundPng = require("./images/foreground.png");
 var _foregroundPngDefault = parcelHelpers.interopDefault(_foregroundPng);
 //import music
@@ -554,7 +554,7 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _capeyfrenPngDefault.default).add('foreground', _foregroundPngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
+        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('foreground', _foregroundPngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
         this.loader.load(()=>this.loadCompleted()
         );
         this.engine = _matterJsDefault.default.Engine.create();
@@ -609,7 +609,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./fish":"7VsCH","./bubble":"iOWvL","./player":"6OTSH","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/capeyfren.png":"6wvYC","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:./images/vine-boom.mp3":"loAs9"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./fish":"7VsCH","./bubble":"iOWvL","./player":"6OTSH","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/didi_sprite.png":"6teKZ"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -45064,7 +45064,7 @@ class Player extends _pixiJs.Sprite {
     beforeUnload() {}
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","matter-js":"2oYKU"}],"7EEYf":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7EEYf":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Foreground", ()=>Foreground
@@ -45089,7 +45089,7 @@ class Foreground extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","matter-js":"2oYKU"}],"i5ObV":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i5ObV":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "lostseed.1ecb0028.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
@@ -45132,9 +45132,6 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sakura
 },{"./helpers/bundle-url":"lgJ39"}],"aPYeH":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspring.c03f841b.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"6wvYC":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "capeyfren.2eea589f.png" + "?" + Date.now();
-
 },{"./helpers/bundle-url":"lgJ39"}],"6TC8P":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "foreground.725088f5.png" + "?" + Date.now();
 
@@ -45143,6 +45140,9 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad
 
 },{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"6teKZ":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "didi_sprite.98bad492.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 

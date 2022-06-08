@@ -12,7 +12,7 @@ import { Foreground } from "./foreground"
 import fishImage from "./images/lostseed.png"
 import bubbleImage from "./images/sakura.png"
 import waterImage from "./images/bgspring.png"
-import playerImage from "./images/capeyfren.png"
+import playerImage from "./images/didi_sprite.png"
 import foregroundImage from "./images/foreground.png"
 
 //import music
