@@ -13,10 +13,7 @@ export class Spider extends PIXI.Sprite {
         this.game = game
         this.anchor.set(0.5)
 
-        window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
-        window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
-
-        this.x =  900;
+        this.x =  2900;
         this.y =  368;
 
         this.scale.set(0.2)
@@ -33,17 +30,11 @@ export class Spider extends PIXI.Sprite {
         }
         this.rigidBody = Matter.Bodies.rectangle(600, 230, 75, 100, playerOptions)
         Matter.Composite.add(game.engine.world, this.rigidBody)
-
-        window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
-        window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
-
-        // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
     }
 
 
     update() {
-        if (this.speed != 0) {
-            Matter.Body.setVelocity(this.rigidBody, { x: this.speed, y: this.rigidBody.velocity.y })
+    
         if (this.x > 1500) {
             this.x = 0;
             // this.jumpSound.play()
@@ -57,44 +48,13 @@ export class Spider extends PIXI.Sprite {
         this.y = this.rigidBody.position.y
         this.rotation = this.rigidBody.angle
 
-        if (this.rigidBody.position.y > 1500) this.resetPosition()
-        } else if (this.speed == 0) {
-            Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
-        }
+        // if (this.rigidBody.position.y > 1500) this.resetPosition()
+        // } else if (this.speed == 0) {
+        //     Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
+        // }
         
     }
 
-    onKeyDown(e: KeyboardEvent) {
-        if (e.key === " " || e.key === "ArrowUp") {
-            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {
-                Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: -0.25 })
-                // this.jumpSound.play()
-            }
-        }
-        switch (e.key) {
-            case "ArrowLeft":
-                this.speed = -5
-                break
-            case "ArrowRight":
-                this.speed = 5
-                break
-        }
-    }
-
-    onKeyUp(e: KeyboardEvent) {
-        switch (e.key) {
-            case "ArrowLeft":
-            case "ArrowRight":
-                this.speed = 0
-                break
-        }
-    }
-
-    resetPosition() {
-        Matter.Body.setPosition(this.rigidBody, { x: 120, y: 30 })
-        Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 0 })
-        Matter.Body.setAngularVelocity(this.rigidBody, 0)
-    }
 
     beforeUnload() {
 

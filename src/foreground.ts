@@ -10,10 +10,10 @@ export class Foreground extends PIXI.Sprite {
     this.x = 100;
     this.y = 100;
     this.anchor.set(0.5);
-    this.width = 20000
+    this.width = 18000
     this.height = 200
 
-    this.rigidBody = Matter.Bodies.rectangle(-500, 500, 9000, 200, {
+    this.rigidBody = Matter.Bodies.rectangle(-500, 500, 18000, 200, {
       isStatic: true
     });
     Matter.Composite.add(game.engine.world, this.rigidBody);

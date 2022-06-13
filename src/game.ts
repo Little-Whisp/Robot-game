@@ -37,7 +37,7 @@ export class Game {
     
 
     constructor() {
-        this.pixi = new PIXI.Application({ width: 1800, height: 450 })
+        this.pixi = new PIXI.Application({ width: 18000, height: 450 })
         document.body.appendChild(this.pixi.view)
         this.loader = new PIXI.Loader()
         this.loader.add('fishTexture', fishImage)
@@ -143,6 +143,7 @@ export class Game {
             bubble.swim()
         }
         this.player.update()
+        // this.spider.update()
     }
 
     collision(sprite1:PIXI.Sprite, sprite2:PIXI.Sprite) {
