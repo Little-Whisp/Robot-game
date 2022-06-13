@@ -45343,9 +45343,9 @@ class Platform extends _pixiJs.Sprite {
         super(texture);
         this.x = 0;
         this.y = 100;
-        this.width = 2000;
+        this.width = 800;
         this.height = 100;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 9000, 200, {
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
             isStatic: true
         });
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);

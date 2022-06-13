@@ -9,11 +9,11 @@ export class Platform extends PIXI.Sprite {
     super(texture);
     this.x = 0;
     this.y = 100;
-    this.width = 2000
+    this.width = 800
     this.height = 100
-    this.rigidBody = Matter.Bodies.rectangle(-500, 500, 9000, 200, {
+      this.rigidBody = Matter.Bodies.rectangle(this.x, this.y, this.width, this.height) ;{
       isStatic: true
-    });
+    };
     Matter.Composite.add(game.engine.world, this.rigidBody);
 
     this.x = this.rigidBody.position.x;
