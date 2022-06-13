@@ -8,9 +8,11 @@ import { Bubble } from './bubble'
 import { Player } from './player'
 import { Spider } from './spider'
 import { Foreground } from "./foreground"
+import { Platform } from "./platform"
 
 //import images
 import fishImage from "./images/lostseed.png"
+import deathScreen from "./images/gameover.png"
 import spiderImage from "./images/spider.png"
 import bubbleImage from "./images/sakura.png"
 import waterImage from "./images/bgspring.png"
@@ -31,6 +33,7 @@ export class Game {
     private spider: Spider
     private gameOverButton : PIXI.Sprite
     private foreground: Foreground;
+    private platform: Platform;
     private score = 0
 
     public engine: Matter.Engine;
@@ -46,6 +49,7 @@ export class Game {
             .add('waterTexture', waterImage)
             .add('playerTexture', playerImage)
             .add('foreground', foregroundImage)
+            .add('death', deathScreen)
             .add("music", bgMusic)
             .add("jumpsound", jumpSoundFile)
         this.loader.load(() => this.loadCompleted())
@@ -93,6 +97,11 @@ export class Game {
         this.foreground = new Foreground(this.loader.resources["foreground"].texture!, this)
         this.pixi.stage.addChild(this.foreground)
 
+        this.platform = new Platform(this.loader.resources["foreground"].texture!, this)
+        this.pixi.stage.addChild(this.platform)
+
+        
+
         let spider = new Spider(this.loader.resources["spiderTexture"].texture!, this)
         this.pixi.stage.addChild(spider)
         this.spiders.push(spider)
@@ -103,11 +112,11 @@ export class Game {
     private gameOver(){
         console.log("game over")
         this.pixi.stop()
-        this.gameOverButton = new PIXI.Sprite(PIXI.Texture.WHITE) // jouw eigen sprite hier
-        this.gameOverButton.width = 100
-        this.gameOverButton.height = 50
+        this.gameOverButton = new PIXI.Sprite(this.loader.resources["death"].texture!) // jouw eigen sprite hier
+        this.gameOverButton.width = 350
+        this.gameOverButton.height = 350
         this.gameOverButton.x = 400
-        this.gameOverButton.y = 200
+        this.gameOverButton.y = 0
         this.gameOverButton.interactive = true
         this.gameOverButton.buttonMode = true
         this.gameOverButton.on('pointerdown', () => this.resetGame())
