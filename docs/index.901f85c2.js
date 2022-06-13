@@ -528,9 +528,12 @@ var _bubble = require("./bubble");
 var _player = require("./player");
 var _spider = require("./spider");
 var _foreground = require("./foreground");
+var _platform = require("./platform");
 //import images
 var _lostseedPng = require("./images/lostseed.png");
 var _lostseedPngDefault = parcelHelpers.interopDefault(_lostseedPng);
+var _gameoverPng = require("./images/gameover.png");
+var _gameoverPngDefault = parcelHelpers.interopDefault(_gameoverPng);
 var _spiderPng = require("./images/spider.png");
 var _spiderPngDefault = parcelHelpers.interopDefault(_spiderPng);
 var _sakuraPng = require("./images/sakura.png");
@@ -558,7 +561,7 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('spiderTexture', _spiderPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('foreground', _foregroundPngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
+        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('spiderTexture', _spiderPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('foreground', _foregroundPngDefault.default).add('death', _gameoverPngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
         this.loader.load(()=>this.loadCompleted()
         );
         this.engine = _matterJsDefault.default.Engine.create();
@@ -589,6 +592,8 @@ class Game {
         }
         this.foreground = new _foreground.Foreground(this.loader.resources["foreground"].texture, this);
         this.pixi.stage.addChild(this.foreground);
+        this.platform = new _platform.Platform(this.loader.resources["foreground"].texture, this);
+        this.pixi.stage.addChild(this.platform);
         let spider = new _spider.Spider(this.loader.resources["spiderTexture"].texture, this);
         this.pixi.stage.addChild(spider);
         this.spiders.push(spider);
@@ -598,12 +603,12 @@ class Game {
     gameOver() {
         console.log("game over");
         this.pixi.stop();
-        this.gameOverButton = new _pixiJs.Sprite(_pixiJs.Texture.WHITE) // jouw eigen sprite hier
+        this.gameOverButton = new _pixiJs.Sprite(this.loader.resources["death"].texture) // jouw eigen sprite hier
         ;
-        this.gameOverButton.width = 100;
-        this.gameOverButton.height = 50;
+        this.gameOverButton.width = 350;
+        this.gameOverButton.height = 350;
         this.gameOverButton.x = 400;
-        this.gameOverButton.y = 200;
+        this.gameOverButton.y = 0;
         this.gameOverButton.interactive = true;
         this.gameOverButton.buttonMode = true;
         this.gameOverButton.on('pointerdown', ()=>this.resetGame()
@@ -638,7 +643,11 @@ class Game {
 }
 new Game();
 
+<<<<<<< HEAD
 },{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+=======
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/gameover.png":"iBSOE","./platform":"lNgaF"}],"dsYej":[function(require,module,exports) {
+>>>>>>> a4144158d3e549c9b335a2eab832d08e7f6ad27a
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -45116,7 +45125,15 @@ class Spider extends _pixiJs.Sprite {
         super(texture);
         this.game = game;
         this.anchor.set(0.5);
+<<<<<<< HEAD
         this.x = 2900;
+=======
+        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
+        );
+        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
+        );
+        this.x = 900;
+>>>>>>> a4144158d3e549c9b335a2eab832d08e7f6ad27a
         this.y = 368;
         this.scale.set(0.2);
         const playerOptions = {
@@ -45131,6 +45148,7 @@ class Spider extends _pixiJs.Sprite {
         };
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+<<<<<<< HEAD
     }
     update() {
         if (this.x > 1500) this.x = 0;
@@ -45146,6 +45164,73 @@ class Spider extends _pixiJs.Sprite {
     // } else if (this.speed == 0) {
     //     Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
     // }
+=======
+        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
+        );
+        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
+        );
+    // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
+    }
+    update() {
+        if (this.speed != 0) {
+            _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
+                x: this.speed,
+                y: this.rigidBody.velocity.y
+            });
+            if (this.x > 1500) this.x = 0;
+            else if (this.x < -100) this.x = 1500;
+            else if (this.y < -20) {
+                this.x = -100;
+                this.y = 250;
+            }
+            this.x = this.rigidBody.position.x;
+            this.y = this.rigidBody.position.y;
+            this.rotation = this.rigidBody.angle;
+            if (this.rigidBody.position.y > 1500) this.resetPosition();
+        } else if (this.speed == 0) _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
+            x: 0,
+            y: 4
+        });
+    }
+    onKeyDown(e) {
+        if (e.key === " " || e.key === "ArrowUp") {
+            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJsDefault.default.Body.applyForce(this.rigidBody, {
+                x: this.rigidBody.position.x,
+                y: this.rigidBody.position.y
+            }, {
+                x: 0,
+                y: -0.25
+            });
+        // this.jumpSound.play()
+        }
+        switch(e.key){
+            case "ArrowLeft":
+                this.speed = -5;
+                break;
+            case "ArrowRight":
+                this.speed = 5;
+                break;
+        }
+    }
+    onKeyUp(e) {
+        switch(e.key){
+            case "ArrowLeft":
+            case "ArrowRight":
+                this.speed = 0;
+                break;
+        }
+    }
+    resetPosition() {
+        _matterJsDefault.default.Body.setPosition(this.rigidBody, {
+            x: 120,
+            y: 30
+        });
+        _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
+            x: 0,
+            y: 0
+        });
+        _matterJsDefault.default.Body.setAngularVelocity(this.rigidBody, 0);
+>>>>>>> a4144158d3e549c9b335a2eab832d08e7f6ad27a
     }
     beforeUnload() {}
 }
@@ -45164,9 +45249,15 @@ class Foreground extends _pixiJs.Sprite {
         this.x = 100;
         this.y = 100;
         this.anchor.set(0.5);
+<<<<<<< HEAD
         this.width = 18000;
         this.height = 200;
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 18000, 200, {
+=======
+        this.width = 20000;
+        this.height = 200;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 9000, 200, {
+>>>>>>> a4144158d3e549c9b335a2eab832d08e7f6ad27a
             isStatic: true
         });
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
@@ -45233,6 +45324,37 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad
 },{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
 
+<<<<<<< HEAD
 },{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+=======
+},{"./helpers/bundle-url":"lgJ39"}],"iBSOE":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "gameover.17d6241a.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"lNgaF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Platform", ()=>Platform
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Platform extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.x = 0;
+        this.y = 100;
+        this.width = 2000;
+        this.height = 100;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 9000, 200, {
+            isStatic: true
+        });
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+    }
+}
+
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+>>>>>>> a4144158d3e549c9b335a2eab832d08e7f6ad27a
 
 //# sourceMappingURL=index.901f85c2.js.map
