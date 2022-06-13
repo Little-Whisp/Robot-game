@@ -125,12 +125,12 @@ export class Game {
     }
 
     private resetGame(){
-        this.player.x = 100;
-        this.player.y = 345;
         // verwijder de game over button
         this.gameOverButton.destroy() 
         // herstart pixi
         this.pixi.start()
+        this.player.x = 100;
+        this.player.y = 345;
     }
 
     public update(delta: number) {

@@ -616,12 +616,12 @@ class Game {
         this.pixi.stage.addChild(this.gameOverButton);
     }
     resetGame() {
-        this.player.x = 100;
-        this.player.y = 345;
         // verwijder de game over button
         this.gameOverButton.destroy();
         // herstart pixi
         this.pixi.start();
+        this.player.x = 100;
+        this.player.y = 345;
     }
     update(delta) {
         _matterJsDefault.default.Engine.update(this.engine, 1000 / 60);
@@ -45297,9 +45297,10 @@ var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
 class Platform extends _pixiJs.Sprite {
     constructor(texture, game){
         super(texture);
-        this.x = 0;
-        this.y = 100;
-        this.width = 800;
+        this.x = 700;
+        this.y = 150;
+        this.anchor.set(0.5);
+        this.width = 200;
         this.height = 100;
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
             isStatic: true
