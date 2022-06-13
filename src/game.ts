@@ -29,6 +29,7 @@ export class Game {
     private seeds: Seed[] = []
     private bubbles: Bubble[] = []
     private spiders: Spider[] = []
+
     private player: Player
     private spider: Spider
     private gameOverButton : PIXI.Sprite
@@ -115,8 +116,8 @@ export class Game {
         this.gameOverButton = new PIXI.Sprite(this.loader.resources["death"].texture!) // jouw eigen sprite hier
         this.gameOverButton.width = 350
         this.gameOverButton.height = 350
-        this.gameOverButton.x = 400
-        this.gameOverButton.y = 0
+        this.gameOverButton.x = 3000
+        this.gameOverButton.y = 200
         this.gameOverButton.interactive = true
         this.gameOverButton.buttonMode = true
         this.gameOverButton.on('pointerdown', () => this.resetGame())
@@ -151,6 +152,8 @@ export class Game {
         for (let bubble of this.bubbles) {
             bubble.swim()
         }
+
+        
         this.player.update()
         // this.spider.update()
     }

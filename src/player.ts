@@ -16,9 +16,6 @@ export class Player extends PIXI.Sprite {
         window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
         window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
-        this.x = game.pixi.screen.width/2;
-        this.y = 345;
-
         this.scale.set(0.2)
 
         const playerOptions: Matter.IBodyDefinition = {
@@ -40,11 +37,10 @@ export class Player extends PIXI.Sprite {
         // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
     }
 
-
     update() {
         if (this.speed != 0) {
             Matter.Body.setVelocity(this.rigidBody, { x: this.speed, y: this.rigidBody.velocity.y })
-     
+
             this.x = this.rigidBody.position.x
             this.y = this.rigidBody.position.y
             this.rotation = this.rigidBody.angle
@@ -56,7 +52,7 @@ export class Player extends PIXI.Sprite {
 
         let mapwidth = 18000
         let mapheight = 600
-        let centerx = 350
+        let centerx = 500
         let centery = 600
 
         // beweeg het karakter over de map maar niet buiten beeld
@@ -64,9 +60,10 @@ export class Player extends PIXI.Sprite {
         this.y = this.clamp(this.y + this.speed, 0, mapheight)
 
         // centreer het hele level onder het karakter, gebruik clamp om bij de randen niet te scrollen
-        let mapx = this.clamp(this.x, centerx, mapwidth - centerx)
+        let mapx = this.clamp(this.x, centerx, mapwidth - 9000)
         let mapy = this.clamp(this.y, centery, mapheight - centery)
-        this.game.pixi.stage.pivot.set(mapx, mapy)        
+
+        this.game.pixi.stage.pivot.set(mapx - 500, mapy)
     }
 
     clamp(num: number, min: number, max: number) {
