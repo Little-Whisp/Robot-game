@@ -14,11 +14,15 @@ export class Player extends PIXI.Sprite {
     this.game = game
     this.anchor.set(0.5)
 
+<<<<<<< HEAD
     window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
     window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
     this.x = 100;
     this.y = 345;
+=======
+        this.scale.set(0.2)
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
 
     this.scale.set(0.2)
 
@@ -43,8 +47,18 @@ export class Player extends PIXI.Sprite {
       Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: jumpforce })
     }
 
+<<<<<<< HEAD
   }
 
+=======
+    update() {
+        if (this.speed != 0) {
+            Matter.Body.setVelocity(this.rigidBody, { x: this.speed, y: this.rigidBody.velocity.y })
+
+            this.x = this.rigidBody.position.x
+            this.y = this.rigidBody.position.y
+            this.rotation = this.rigidBody.angle
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
 
   update() {
     if (this.xspeed != 0) {
@@ -54,10 +68,18 @@ export class Player extends PIXI.Sprite {
     this.y = this.rigidBody.position.y
     this.rotation = this.rigidBody.angle
 
+<<<<<<< HEAD
     if (this.rigidBody.position.y > 500) this.resetPosition()
+=======
+        let mapwidth = 18000
+        let mapheight = 600
+        let centerx = 500
+        let centery = 600
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
 
   }
 
+<<<<<<< HEAD
 onKeyDown(e: KeyboardEvent) {
 
     if (e.key === " " || e.key === "ArrowUp") {
@@ -65,6 +87,13 @@ onKeyDown(e: KeyboardEvent) {
           Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: -0.25 })
 
       }
+=======
+        // centreer het hele level onder het karakter, gebruik clamp om bij de randen niet te scrollen
+        let mapx = this.clamp(this.x, centerx, mapwidth - 9000)
+        let mapy = this.clamp(this.y, centery, mapheight - centery)
+
+        this.game.pixi.stage.pivot.set(mapx - 500, mapy)
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
     }
 
     console.log(e.key)

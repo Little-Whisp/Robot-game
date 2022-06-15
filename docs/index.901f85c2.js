@@ -607,8 +607,8 @@ class Game {
         ;
         this.gameOverButton.width = 350;
         this.gameOverButton.height = 350;
-        this.gameOverButton.x = 400;
-        this.gameOverButton.y = 0;
+        this.gameOverButton.x = 3000;
+        this.gameOverButton.y = 200;
         this.gameOverButton.interactive = true;
         this.gameOverButton.buttonMode = true;
         this.gameOverButton.on('pointerdown', ()=>this.resetGame()
@@ -45013,8 +45013,11 @@ class Player extends _pixiJs.Sprite {
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
+<<<<<<< HEAD
         this.x = 100;
         this.y = 345;
+=======
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
         this.scale.set(0.2);
         const playerOptions = {
             density: 0.001,
@@ -45040,12 +45043,15 @@ class Player extends _pixiJs.Sprite {
                 x: this.speed,
                 y: this.rigidBody.velocity.y
             });
+<<<<<<< HEAD
             if (this.x > 1500) this.x = 0;
             else if (this.x < -100) this.x = 1500;
             else if (this.y < -20) {
                 this.x = -100;
                 this.y = 250;
             }
+=======
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
             this.x = this.rigidBody.position.x;
             this.y = this.rigidBody.position.y;
             this.rotation = this.rigidBody.angle;
@@ -45054,6 +45060,23 @@ class Player extends _pixiJs.Sprite {
             x: 0,
             y: 4
         });
+<<<<<<< HEAD
+=======
+        let mapwidth = 18000;
+        let mapheight = 600;
+        let centerx = 500;
+        let centery = 600;
+        // beweeg het karakter over de map maar niet buiten beeld
+        this.x = this.clamp(this.x + this.speed, 0, mapwidth);
+        this.y = this.clamp(this.y + this.speed, 0, mapheight);
+        // centreer het hele level onder het karakter, gebruik clamp om bij de randen niet te scrollen
+        let mapx = this.clamp(this.x, centerx, mapwidth - 9000);
+        let mapy = this.clamp(this.y, centery, mapheight - centery);
+        this.game.pixi.stage.pivot.set(mapx - 500, mapy);
+    }
+    clamp(num, min, max) {
+        return Math.min(Math.max(num, min), max);
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
     }
     onKeyDown(e) {
         if (e.key === " " || e.key === "ArrowUp") {
@@ -45112,11 +45135,15 @@ class Spider extends _pixiJs.Sprite {
         super(texture);
         this.game = game;
         this.anchor.set(0.5);
+<<<<<<< HEAD
         window.addEventListener("keydown", (e)=>this.onKeyDown(e)
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
         this.x = 900;
+=======
+        this.x = 2900;
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
         this.y = 368;
         this.scale.set(0.2);
         const playerOptions = {
@@ -45131,6 +45158,7 @@ class Spider extends _pixiJs.Sprite {
         };
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+<<<<<<< HEAD
         window.addEventListener("keydown", (e)=>this.onKeyDown(e)
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
@@ -45196,6 +45224,23 @@ class Spider extends _pixiJs.Sprite {
             y: 0
         });
         _matterJsDefault.default.Body.setAngularVelocity(this.rigidBody, 0);
+=======
+    }
+    update() {
+        if (this.x > 1500) this.x = 0;
+        else if (this.x < -100) this.x = 1500;
+        else if (this.y < -20) {
+            this.x = -100;
+            this.y = 250;
+        }
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+        this.rotation = this.rigidBody.angle;
+    // if (this.rigidBody.position.y > 1500) this.resetPosition()
+    // } else if (this.speed == 0) {
+    //     Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
+    // }
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
     }
     beforeUnload() {}
 }
@@ -45214,6 +45259,7 @@ class Foreground extends _pixiJs.Sprite {
         this.x = 100;
         this.y = 100;
         this.anchor.set(0.5);
+<<<<<<< HEAD
         this.width = 20000;
         this.height = 200;
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 9000, 200, {
@@ -45242,8 +45288,35 @@ class Platform extends _pixiJs.Sprite {
         this.width = 200;
         this.height = 100;
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
+=======
+        this.width = 18000;
+        this.height = 200;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 18000, 200, {
+>>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
             isStatic: true
         });
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+    }
+}
+
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lNgaF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Platform", ()=>Platform
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Platform extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.x = 0;
+        this.y = 100;
+        this.width = 800;
+        this.height = 100;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
         this.x = this.rigidBody.position.x;
         this.y = this.rigidBody.position.y;
