@@ -101,8 +101,6 @@ export class Game {
         this.platform = new Platform(this.loader.resources["foreground"].texture!, this)
         this.pixi.stage.addChild(this.platform)
 
-        
-
         let spider = new Spider(this.loader.resources["spiderTexture"].texture!, this)
         this.pixi.stage.addChild(spider)
         this.spiders.push(spider)
@@ -116,8 +114,8 @@ export class Game {
         this.gameOverButton = new PIXI.Sprite(this.loader.resources["death"].texture!) // jouw eigen sprite hier
         this.gameOverButton.width = 350
         this.gameOverButton.height = 350
-        this.gameOverButton.x = 3000
-        this.gameOverButton.y = 200
+        this.gameOverButton.x = this.player.x
+        this.gameOverButton.y = 100
         this.gameOverButton.interactive = true
         this.gameOverButton.buttonMode = true
         this.gameOverButton.on('pointerdown', () => this.resetGame())
@@ -153,7 +151,6 @@ export class Game {
             bubble.swim()
         }
 
-        
         this.player.update()
         // this.spider.update()
     }

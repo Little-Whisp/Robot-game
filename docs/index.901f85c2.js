@@ -607,8 +607,8 @@ class Game {
         ;
         this.gameOverButton.width = 350;
         this.gameOverButton.height = 350;
-        this.gameOverButton.x = 3000;
-        this.gameOverButton.y = 200;
+        this.gameOverButton.x = this.player.x;
+        this.gameOverButton.y = 100;
         this.gameOverButton.interactive = true;
         this.gameOverButton.buttonMode = true;
         this.gameOverButton.on('pointerdown', ()=>this.resetGame()
