@@ -556,7 +556,7 @@ class Game {
     score = 0;
     constructor(){
         this.pixi = new _pixiJs.Application({
-            width: 1800,
+            width: 18000,
             height: 450
         });
         document.body.appendChild(this.pixi.view);
@@ -583,13 +583,13 @@ class Game {
         // tilingSprite.tilePosition.y += 0;
         });
         for(let i = 0; i < 40; i++){
-            let seed = new _seed.Seed(this.loader.resources["fishTexture"].texture);
-            this.pixi.stage.addChild(seed);
-            this.seeds.push(seed);
             let bubble = new _bubble.Bubble(this.loader.resources["bubbleTexture"].texture);
             this.pixi.stage.addChild(bubble);
             this.bubbles.push(bubble);
         }
+        let seed = new _seed.Seed(this.loader.resources["fishTexture"].texture);
+        this.pixi.stage.addChild(seed);
+        this.seeds.push(seed);
         this.foreground = new _foreground.Foreground(this.loader.resources["foreground"].texture, this);
         this.pixi.stage.addChild(this.foreground);
         this.platform = new _platform.Platform(this.loader.resources["foreground"].texture, this);
@@ -619,20 +619,21 @@ class Game {
         // verwijder de game over button
         this.gameOverButton.destroy();
         // herstart pixi
+        this.player.resetPosition();
         this.pixi.start();
-        this.player.x = 100;
-        this.player.y = 345;
     }
     update(delta) {
         _matterJsDefault.default.Engine.update(this.engine, 1000 / 60);
         for (let seed of this.seeds)if (this.collision(this.player, seed)) {
             seed.hitCapy();
+            this.player.hitseed();
             this.score++;
             console.log(this.score);
         }
         for (let spider of this.spiders)if (this.collision(this.player, spider)) this.gameOver();
         for (let bubble of this.bubbles)bubble.swim();
         this.player.update();
+        console.log(this.player.gotSeed);
     }
     collision(sprite1, sprite2) {
         const bounds1 = sprite1.getBounds();
@@ -642,7 +643,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./platform":"lNgaF","./images/lostseed.png":"i5ObV","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./platform":"lNgaF","./images/lostseed.png":"i5ObV","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./seed":"iu1lN"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -44941,35 +44942,7 @@ var global = arguments[3];
     ]);
 });
 
-},{}],"iu1lN":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Seed", ()=>Seed
-);
-var _pixiJs = require("pixi.js");
-class Seed extends _pixiJs.Sprite {
-    constructor(texture){
-        super(texture);
-        this.speed = Math.random() * 5;
-        this.x = 1200;
-        this.y = 300;
-        this.anchor.set(0.5);
-        this.scale.set(Math.random() * 1);
-    }
-    fly() {
-        this.x *= 1;
-        this.tint = 16777215;
-        this.rotation -= 0.009;
-        this.x += 2;
-        if (this.x > 1900) this.x = -100;
-        this.x -= this.speed;
-    }
-    hitCapy() {
-        this.x = 10000000;
-    }
-}
-
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iOWvL":[function(require,module,exports) {
+},{}],"iOWvL":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Bubble", ()=>Bubble
@@ -45001,10 +44974,10 @@ parcelHelpers.export(exports, "Player", ()=>Player
 );
 var _pixiJs = require("pixi.js");
 var _matterJs = require("matter-js");
-var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
 class Player extends _pixiJs.Sprite {
-    // jumpSound:HTMLAudioElement
-    speed = 0;
+    xspeed = 0;
+    yspeed = 0;
+    gotSeed = false;
     constructor(texture, game){
         super(texture);
         this.game = game;
@@ -45013,11 +44986,8 @@ class Player extends _pixiJs.Sprite {
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
-<<<<<<< HEAD
         this.x = 100;
         this.y = 345;
-=======
->>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
         this.scale.set(0.2);
         const playerOptions = {
             density: 0.001,
@@ -45029,46 +44999,42 @@ class Player extends _pixiJs.Sprite {
             inverseInertia: Infinity,
             label: "Player"
         };
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
-        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
-        );
-        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
-        );
-    // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
+        this.rigidBody = _matterJs.Bodies.rectangle(this.x, this.y, 75, 100, playerOptions);
+        _matterJs.Composite.add(game.engine.world, this.rigidBody);
+    }
+    jump() {
+        if (this.y >= 300) {
+            let jumpforce = -0.2;
+            _matterJs.Body.applyForce(this.rigidBody, {
+                x: this.rigidBody.position.x,
+                y: this.rigidBody.position.y
+            }, {
+                x: 0,
+                y: jumpforce
+            });
+        }
+    }
+    hitseed() {
+        this.gotSeed = true;
     }
     update() {
-        if (this.speed != 0) {
-            _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
-                x: this.speed,
-                y: this.rigidBody.velocity.y
-            });
-<<<<<<< HEAD
-            if (this.x > 1500) this.x = 0;
-            else if (this.x < -100) this.x = 1500;
-            else if (this.y < -20) {
-                this.x = -100;
-                this.y = 250;
-            }
-=======
->>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
-            this.x = this.rigidBody.position.x;
-            this.y = this.rigidBody.position.y;
-            this.rotation = this.rigidBody.angle;
-            if (this.rigidBody.position.y > 1500) this.resetPosition();
-        } else if (this.speed == 0) _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
-            x: 0,
-            y: 4
-        });
-<<<<<<< HEAD
-=======
         let mapwidth = 18000;
         let mapheight = 600;
         let centerx = 500;
         let centery = 600;
+        //movement things
+        if (this.xspeed != 0) _matterJs.Body.setVelocity(this.rigidBody, {
+            x: this.xspeed,
+            y: this.rigidBody.velocity.y
+        });
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+        this.rotation = this.rigidBody.angle;
+        if (this.rigidBody.position.y > 500) this.resetPosition();
+        //camera things jwz
         // beweeg het karakter over de map maar niet buiten beeld
-        this.x = this.clamp(this.x + this.speed, 0, mapwidth);
-        this.y = this.clamp(this.y + this.speed, 0, mapheight);
+        this.x = this.clamp(this.x + this.xspeed, 0, mapwidth);
+        this.y = this.clamp(this.y + this.yspeed, 0, mapheight);
         // centreer het hele level onder het karakter, gebruik clamp om bij de randen niet te scrollen
         let mapx = this.clamp(this.x, centerx, mapwidth - 9000);
         let mapy = this.clamp(this.y, centery, mapheight - centery);
@@ -45076,48 +45042,72 @@ class Player extends _pixiJs.Sprite {
     }
     clamp(num, min, max) {
         return Math.min(Math.max(num, min), max);
->>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
     }
+    //movement thingies
+    //detecteerd de keyboard indrukkings
     onKeyDown(e) {
         if (e.key === " " || e.key === "ArrowUp") {
-            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJsDefault.default.Body.applyForce(this.rigidBody, {
+            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJs.Body.applyForce(this.rigidBody, {
                 x: this.rigidBody.position.x,
                 y: this.rigidBody.position.y
             }, {
                 x: 0,
                 y: -0.25
             });
-        // this.jumpSound.play()
         }
-        switch(e.key){
-            case "ArrowLeft":
-                this.speed = -5;
+        switch(e.key.toUpperCase()){
+            case "A":
+            case "ARROWLEFT":
+                this.xspeed = -7;
+                this.scale.x = -0.2;
                 break;
-            case "ArrowRight":
-                this.speed = 5;
+            case "D":
+            case "ARROWRIGHT":
+                this.xspeed = 7;
+                this.scale.x = 0.2;
+                break;
+            case "W":
+            case "ARROWUP":
+            case " ":
+                this.jump();
+                break;
+            case "S":
+            case "ARROWDOWN":
+                this.yspeed = 7;
                 break;
         }
     }
+    //detecteerd de keyboard loslatings
     onKeyUp(e) {
-        switch(e.key){
-            case "ArrowLeft":
-            case "ArrowRight":
-                this.speed = 0;
+        switch(e.key.toUpperCase()){
+            case " ":
+                break;
+            case "A":
+            case "D":
+            case "ARROWLEFT":
+            case "ARROWRIGHT":
+                this.xspeed = 0;
+                break;
+            case "W":
+            case "S":
+            case "ARROWUP":
+            case "ARROWDOWN":
+                this.yspeed = 0;
                 break;
         }
     }
+    //al gaat het fout herstart hij je op de originele plek
     resetPosition() {
-        _matterJsDefault.default.Body.setPosition(this.rigidBody, {
-            x: 120,
-            y: 30
+        _matterJs.Body.setPosition(this.rigidBody, {
+            x: 100,
+            y: 345
         });
-        _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
+        _matterJs.Body.setVelocity(this.rigidBody, {
             x: 0,
             y: 0
         });
-        _matterJsDefault.default.Body.setAngularVelocity(this.rigidBody, 0);
+        _matterJs.Body.setAngularVelocity(this.rigidBody, 0);
     }
-    beforeUnload() {}
 }
 
 },{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lt4qm":[function(require,module,exports) {
@@ -45129,21 +45119,16 @@ var _pixiJs = require("pixi.js");
 var _matterJs = require("matter-js");
 var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
 class Spider extends _pixiJs.Sprite {
-    // jumpSound:HTMLAudioElement
     speed = 0;
     constructor(texture, game){
         super(texture);
         this.game = game;
         this.anchor.set(0.5);
-<<<<<<< HEAD
         window.addEventListener("keydown", (e)=>this.onKeyDown(e)
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
         this.x = 900;
-=======
-        this.x = 2900;
->>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
         this.y = 368;
         this.scale.set(0.2);
         const playerOptions = {
@@ -45158,7 +45143,6 @@ class Spider extends _pixiJs.Sprite {
         };
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-<<<<<<< HEAD
         window.addEventListener("keydown", (e)=>this.onKeyDown(e)
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
@@ -45224,23 +45208,6 @@ class Spider extends _pixiJs.Sprite {
             y: 0
         });
         _matterJsDefault.default.Body.setAngularVelocity(this.rigidBody, 0);
-=======
-    }
-    update() {
-        if (this.x > 1500) this.x = 0;
-        else if (this.x < -100) this.x = 1500;
-        else if (this.y < -20) {
-            this.x = -100;
-            this.y = 250;
-        }
-        this.x = this.rigidBody.position.x;
-        this.y = this.rigidBody.position.y;
-        this.rotation = this.rigidBody.angle;
-    // if (this.rigidBody.position.y > 1500) this.resetPosition()
-    // } else if (this.speed == 0) {
-    //     Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
-    // }
->>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
     }
     beforeUnload() {}
 }
@@ -45259,10 +45226,9 @@ class Foreground extends _pixiJs.Sprite {
         this.x = 100;
         this.y = 100;
         this.anchor.set(0.5);
-<<<<<<< HEAD
-        this.width = 20000;
+        this.width = 18000;
         this.height = 200;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 9000, 200, {
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 18000, 200, {
             isStatic: true
         });
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
@@ -45288,35 +45254,8 @@ class Platform extends _pixiJs.Sprite {
         this.width = 200;
         this.height = 100;
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
-=======
-        this.width = 18000;
-        this.height = 200;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 18000, 200, {
->>>>>>> 3d7fd755a5ef509a5b09169e2bb7334f8af6c198
             isStatic: true
         });
-        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-        this.x = this.rigidBody.position.x;
-        this.y = this.rigidBody.position.y;
-    }
-}
-
-},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lNgaF":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Platform", ()=>Platform
-);
-var _pixiJs = require("pixi.js");
-var _matterJs = require("matter-js");
-var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
-class Platform extends _pixiJs.Sprite {
-    constructor(texture, game){
-        super(texture);
-        this.x = 0;
-        this.y = 100;
-        this.width = 800;
-        this.height = 100;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
         this.x = this.rigidBody.position.x;
         this.y = this.rigidBody.position.y;
@@ -45384,6 +45323,35 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad
 },{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}],"iu1lN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Seed", ()=>Seed
+);
+var _pixiJs = require("pixi.js");
+class Seed extends _pixiJs.Sprite {
+    gotSeed = this.gotSeed;
+    constructor(texture){
+        super(texture);
+        this.speed = Math.random() * 5;
+        this.x = 1200;
+        this.y = 300;
+        this.anchor.set(0.5);
+        this.scale.set(1);
+    }
+    fly() {
+        this.x *= 1;
+        this.tint = 16777215;
+        this.rotation -= 0.009;
+        this.x += 2;
+        if (this.x > 1900) this.x = -100;
+        this.x -= this.speed;
+    }
+    hitCapy() {
+        this.x = 10000000;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.901f85c2.js.map
