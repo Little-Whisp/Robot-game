@@ -120,6 +120,7 @@ export class Game {
         this.gameOverButton.interactive = true
         this.gameOverButton.buttonMode = true
         this.gameOverButton.on('pointerdown', () => this.resetGame())
+        
 
         this.pixi.stage.addChild(this.gameOverButton)
     }
@@ -128,9 +129,8 @@ export class Game {
         // verwijder de game over button
         this.gameOverButton.destroy() 
         // herstart pixi
+        this.player.resetPosition()
         this.pixi.start()
-        this.player.x = 100;
-        this.player.y = 345;
     }
 
     public update(delta: number) {

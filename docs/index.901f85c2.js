@@ -642,7 +642,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./images/lostseed.png":"i5ObV","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/gameover.png":"iBSOE","./platform":"lNgaF"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./platform":"lNgaF","./images/lostseed.png":"i5ObV","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -45225,6 +45225,31 @@ class Foreground extends _pixiJs.Sprite {
     }
 }
 
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lNgaF":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Platform", ()=>Platform
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Platform extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.x = 700;
+        this.y = 150;
+        this.anchor.set(0.5);
+        this.width = 200;
+        this.height = 100;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
+            isStatic: true
+        });
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+    }
+}
+
 },{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i5ObV":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "lostseed.1ecb0028.png" + "?" + Date.now();
 
@@ -45262,7 +45287,10 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"ceHb0":[function(require,module,exports) {
+},{}],"iBSOE":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "gameover.17d6241a.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"ceHb0":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "spider.d316874d.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"8JSvj":[function(require,module,exports) {
@@ -45283,34 +45311,6 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad
 },{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"iBSOE":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "gameover.17d6241a.png" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"lNgaF":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Platform", ()=>Platform
-);
-var _pixiJs = require("pixi.js");
-var _matterJs = require("matter-js");
-var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
-class Platform extends _pixiJs.Sprite {
-    constructor(texture, game){
-        super(texture);
-        this.x = 700;
-        this.y = 150;
-        this.anchor.set(0.5);
-        this.width = 200;
-        this.height = 100;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
-            isStatic: true
-        });
-        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-        this.x = this.rigidBody.position.x;
-        this.y = this.rigidBody.position.y;
-    }
-}
-
-},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.901f85c2.js.map

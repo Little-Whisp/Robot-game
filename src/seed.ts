@@ -9,7 +9,7 @@ public speed : number
         this.x = 1200
         this.y = 300
         this.anchor.set(0.5)
-        this.scale.set(Math.random() * 1)
+        this.scale.set(1)
 
     }
    public fly(){
