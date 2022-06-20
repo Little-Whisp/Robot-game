@@ -530,6 +530,7 @@ var _spider = require("./spider");
 var _nightsceneground = require("./nightsceneground");
 var _seedcollect = require("./seedcollect");
 var _platform = require("./platform");
+var _platform2 = require("./platform2");
 //import images
 var _gameoverPng = require("./images/gameover.png");
 var _gameoverPngDefault = parcelHelpers.interopDefault(_gameoverPng);
@@ -601,6 +602,8 @@ class Game {
         this.pixi.stage.addChild(this.nightsceneground);
         this.platform = new _platform.Platform(this.loader.resources["platformTexture"].texture, this);
         this.pixi.stage.addChild(this.platform);
+        this.platform2 = new _platform2.Platform2(this.loader.resources["foreground"].texture, this);
+        this.pixi.stage.addChild(this.platform2);
         let spider = new _spider.Spider(this.loader.resources["spiderTexture"].texture, this);
         this.pixi.stage.addChild(spider);
         this.spiders.push(spider);
@@ -668,7 +671,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./platform2":"35tee"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -45430,6 +45433,31 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad
 },{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}],"35tee":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Platform2", ()=>Platform2
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Platform2 extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.x = 1200;
+        this.y = 150;
+        this.anchor.set(0.5);
+        this.width = 200;
+        this.height = 100;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
+            isStatic: true
+        });
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+    }
+}
+
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.901f85c2.js.map

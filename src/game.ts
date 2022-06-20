@@ -10,6 +10,7 @@ import { Spider } from './spider'
 import { Nightsceneground } from "./nightsceneground"
 import { Seedcollect } from "./seedcollect"
 import { Platform } from "./platform"
+import { Platform2 } from "./platform2"
 
 //import images
 import deathScreen from "./images/gameover.png"
@@ -40,6 +41,7 @@ export class Game {
     private gameOverButton: PIXI.Sprite
     private nightsceneground: Nightsceneground;
     private platform: Platform;
+    private platform2: Platform2;
     private score = 0
 
     public engine: Matter.Engine;
@@ -111,6 +113,11 @@ export class Game {
 
         this.platform = new Platform(this.loader.resources["platformTexture"].texture!, this)
         this.pixi.stage.addChild(this.platform)
+
+        this.platform2 = new Platform2(this.loader.resources["foreground"].texture!, this)
+        this.pixi.stage.addChild(this.platform2)
+
+        
 
         let spider = new Spider(this.loader.resources["spiderTexture"].texture!, this)
         this.pixi.stage.addChild(spider)
