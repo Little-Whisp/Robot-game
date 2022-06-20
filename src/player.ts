@@ -22,7 +22,7 @@ export class Player extends PIXI.Sprite {
     window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
     this.x = 200;
-    this.y = 30;
+    this.y = 300;
 
     this.scale.set(0.2)
 
@@ -64,7 +64,7 @@ export class Player extends PIXI.Sprite {
     let centerx = 500
     let centery = 600
 
-    //movement things
+    //Movement 
     if (this.xspeed != 0) {
       Matter.Body.setVelocity(this.rigidBody, { x: this.xspeed, y: this.rigidBody.velocity.y })
     }
@@ -75,11 +75,11 @@ export class Player extends PIXI.Sprite {
     if (this.rigidBody.position.y > 500) this.resetPosition()
 
     //camera things jwz
-    // beweeg het karakter over de map maar niet buiten beeld
+    // Character can't fall out of the game area
     this.x = this.clamp(this.x + this.xspeed, 0, mapwidth)
     this.y = this.clamp(this.y + this.yspeed, 0, mapheight)
 
-    // centreer het hele level onder het karakter, gebruik clamp om bij de randen niet te scrollen
+    //Centre the level underneath the character.
     let mapx = this.clamp(this.x, centerx, mapwidth - 9000)
     let mapy = this.clamp(this.y, centery, mapheight - centery)
 
@@ -90,8 +90,8 @@ export class Player extends PIXI.Sprite {
     return Math.min(Math.max(num, min), max)
   }
 
-  //movement thingies
-  //detecteerd de keyboard indrukkings
+  //Movement.
+  //Detect the keyboard.
   onKeyDown(e: KeyboardEvent) {
     if (e.key === " " || e.key === "ArrowUp") {
       if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {
@@ -125,7 +125,7 @@ export class Player extends PIXI.Sprite {
     }
   }
 
-  //detecteerd de keyboard loslatings
+  //Detect the keyboard
   onKeyUp(e: KeyboardEvent) {
     switch (e.key.toUpperCase()) {
       case " ":

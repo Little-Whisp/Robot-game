@@ -114,7 +114,7 @@ export class Game {
         this.platform = new Platform(this.loader.resources["platformTexture"].texture!, this)
         this.pixi.stage.addChild(this.platform)
 
-        this.platform2 = new Platform2(this.loader.resources["foreground"].texture!, this)
+        this.platform2 = new Platform2(this.loader.resources["platformTexture"].texture!, this)
         this.pixi.stage.addChild(this.platform2)
 
         
