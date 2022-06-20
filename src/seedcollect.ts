@@ -1,3 +1,4 @@
+//Shooting seed (Jany code)
 import * as PIXI from "pixi.js";
 import { Game } from "./game";
 
@@ -27,3 +28,4 @@ export class Seedcollect extends PIXI.Sprite {
     }
   }
 }
+//Shooting seed (Jany code)

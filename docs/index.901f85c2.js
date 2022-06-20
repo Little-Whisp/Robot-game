@@ -676,7 +676,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./platform2":"35tee","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:./images/bgm/Ballad.mp3":"lTmzU","url:./images/sfx/vine-boom.mp3":"hs6F9"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./platform2":"35tee","url:./images/bgm/Ballad.mp3":"lTmzU","url:./images/sfx/vine-boom.mp3":"hs6F9"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -45286,7 +45286,9 @@ class Nightsceneground extends _pixiJs.Sprite {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Seedcollect", ()=>Seedcollect
-);
+) //Shooting seed (Jany code)
+;
+//Shooting seed (Jany code)
 var _pixiJs = require("pixi.js");
 class Seedcollect extends _pixiJs.Sprite {
     constructor(bx, by, mygame, texture){
@@ -45321,31 +45323,6 @@ class Platform extends _pixiJs.Sprite {
     constructor(texture, game){
         super(texture);
         this.x = 700;
-        this.y = 150;
-        this.anchor.set(0.5);
-        this.width = 200;
-        this.height = 100;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
-            isStatic: true
-        });
-        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-        this.x = this.rigidBody.position.x;
-        this.y = this.rigidBody.position.y;
-    }
-}
-
-},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"35tee":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Platform2", ()=>Platform2
-);
-var _pixiJs = require("pixi.js");
-var _matterJs = require("matter-js");
-var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
-class Platform2 extends _pixiJs.Sprite {
-    constructor(texture, game){
-        super(texture);
-        this.x = 1200;
         this.y = 150;
         this.anchor.set(0.5);
         this.width = 200;
@@ -45420,7 +45397,32 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "platfo
 },{"./helpers/bundle-url":"lgJ39"}],"hD0fW":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "forground.daad521d.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"lTmzU":[function(require,module,exports) {
+},{"./helpers/bundle-url":"lgJ39"}],"35tee":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Platform2", ()=>Platform2
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Platform2 extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.x = 1200;
+        this.y = 150;
+        this.anchor.set(0.5);
+        this.width = 200;
+        this.height = 100;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
+            isStatic: true
+        });
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+    }
+}
+
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lTmzU":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad.30e05f90.mp3" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"hs6F9":[function(require,module,exports) {
