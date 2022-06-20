@@ -4,7 +4,6 @@ import Matter from 'matter-js'
 
 export class Spider extends PIXI.Sprite {
     rigidBody: Matter.Body
-    // jumpSound:HTMLAudioElement
     speed: number = 0
     game: Game
 

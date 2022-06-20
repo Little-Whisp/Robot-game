@@ -9,6 +9,7 @@ import { Player } from './player'
 import { Spider } from './spider'
 import { Foreground } from "./foreground"
 import { Platform } from "./platform"
+import { Platform2 } from "./platform2"
 
 //import images
 import fishImage from "./images/lostseed.png"
@@ -34,6 +35,7 @@ export class Game {
     private gameOverButton : PIXI.Sprite
     private foreground: Foreground;
     private platform: Platform;
+    private platform2: Platform2;
     private score = 0
 
     public engine: Matter.Engine;
@@ -100,6 +102,9 @@ export class Game {
         this.platform = new Platform(this.loader.resources["foreground"].texture!, this)
         this.pixi.stage.addChild(this.platform)
 
+        this.platform2 = new Platform2(this.loader.resources["foreground"].texture!, this)
+        this.pixi.stage.addChild(this.platform2)
+
         
 
         let spider = new Spider(this.loader.resources["spiderTexture"].texture!, this)
@@ -120,6 +125,7 @@ export class Game {
         this.gameOverButton.interactive = true
         this.gameOverButton.buttonMode = true
         this.gameOverButton.on('pointerdown', () => this.resetGame())
+        
 
         this.pixi.stage.addChild(this.gameOverButton)
     }
@@ -128,9 +134,8 @@ export class Game {
         // verwijder de game over button
         this.gameOverButton.destroy() 
         // herstart pixi
+        this.player.resetPosition()
         this.pixi.start()
-        this.player.x = 100;
-        this.player.y = 345;
     }
 
     public update(delta: number) {
