@@ -11,6 +11,9 @@ import { Nightsceneground } from "./nightsceneground"
 import { Seedcollect } from "./seedcollect"
 import { Platform } from "./platform"
 import { Platform2 } from "./platform2"
+//Title screen
+import { StartButton } from './startButton'
+import { GameOverButton } from './gameoverbutton'
 
 //import images
 import deathScreen from "./images/gameover.png"
@@ -22,9 +25,13 @@ import backgroundnightsceneImage from "./images/bgspring.png"
 import playerImage from "./images/didi_sprite.png"
 import platformImage from "./images/platform.png"
 import nightscenegroundImage from "./images/forground.png"
+//Title Screen
+import startButton from "./images/titlescreen/button.png"
+import logo from "./images/titlescreen/logo.png"
 
 //import music
 import bgMusic from "url:./images/bgm/Ballad.mp3"
+import titleMusic from "url:./images/bgm/Starrified.mp3"
 import jumpSoundFile from "url:./images/sfx/vine-boom.mp3"
 
 export class Game {
@@ -38,7 +45,8 @@ export class Game {
     private seedscollect: Seedcollect[] = []
 
     private player: Player
-    private gameOverButton: PIXI.Sprite
+    public startButton: StartButton
+    private gameOverButton: GameOverButton
     private nightsceneground: Nightsceneground;
     private platform: Platform;
     private platform2: Platform2;
@@ -62,12 +70,47 @@ export class Game {
             .add('sunnightsceneTexture', sunnightsceneImage)
             .add("music", bgMusic)
             .add("jumpsound", jumpSoundFile)
+            //Title Screen
+            .add('startButtonTexture', startButton)
+            .add('logoTexture', logo)
+            .add("titleMusic", titleMusic)
         this.loader.load(() => this.loadCompleted())
 
         this.engine = Matter.Engine.create()
     }
 
     private loadCompleted() {
+        const tilingSprite = new PIXI.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture!,
+            this.pixi.screen.width,
+            this.pixi.screen.height,
+        );
+        tilingSprite.tint = Math.random() * 0xFFFFFF
+        this.pixi.stage.addChild(tilingSprite);
+
+        let count = 0;
+
+        this.pixi.ticker.add(() => {
+            count += 0.005;
+
+            tilingSprite.tileScale.x = 1;
+            // tilingSprite.tileScale.y = 1 + Math.cos(count);
+
+            tilingSprite.tilePosition.x += -2;
+            // tilingSprite.tilePosition.y += 0;
+        })
+        let titleTheme = this.loader.resources["titleMusic"].data!
+        titleTheme.play()
+
+        let logo = new PIXI.Sprite(this.loader.resources["logoTexture"].texture!);
+        logo.x = 600
+        logo.tint = Math.random() * 0xFFFFFF
+        this.pixi.stage.addChild(logo);
+
+        this.startButton = new StartButton(this.loader.resources["startButtonTexture"].texture!, this)
+        this.pixi.stage.addChild(this.startButton)
+    }
+
+    loadStage() {
         this.engine = Matter.Engine.create()
 
         let theme = this.loader.resources["music"].data!
@@ -117,7 +160,7 @@ export class Game {
         this.platform2 = new Platform2(this.loader.resources["platformTexture"].texture!, this)
         this.pixi.stage.addChild(this.platform2)
 
-        
+
 
         let spider = new Spider(this.loader.resources["spiderTexture"].texture!, this)
         this.pixi.stage.addChild(spider)
@@ -145,20 +188,11 @@ export class Game {
     private gameOver() {
         console.log("game over")
         this.pixi.stop()
-        this.gameOverButton = new PIXI.Sprite(this.loader.resources["death"].texture!)
-        this.gameOverButton.width = 100
-        this.gameOverButton.height = 100
-        this.gameOverButton.x = 400
-        this.gameOverButton.y = 200
-        this.gameOverButton.interactive = true
-        this.gameOverButton.buttonMode = true
-        this.gameOverButton.on('pointerdown', () => this.resetGame())
-
-
+        this.gameOverButton = new GameOverButton(this.loader.resources["death"].texture!, this)
         this.pixi.stage.addChild(this.gameOverButton)
     }
 
-    private resetGame() {
+    public resetGame() {
         // delete the game over button
         this.gameOverButton.destroy()
         // restart pixi
@@ -166,7 +200,7 @@ export class Game {
         this.pixi.start()
     }
 
-    
+
 
     public update(delta: number) {
         Matter.Engine.update(this.engine, 1000 / 60)
@@ -212,9 +246,6 @@ export class Game {
         this.loadStage()
     }
 
-    loadStage() {
-        
-    }
 
     collision(sprite1: PIXI.Sprite, sprite2: PIXI.Sprite) {
         const bounds1 = sprite1.getBounds()

@@ -531,6 +531,9 @@ var _nightsceneground = require("./nightsceneground");
 var _seedcollect = require("./seedcollect");
 var _platform = require("./platform");
 var _platform2 = require("./platform2");
+//Title screen
+var _startButton = require("./startButton");
+var _gameoverbutton = require("./gameoverbutton");
 //import images
 var _gameoverPng = require("./images/gameover.png");
 var _gameoverPngDefault = parcelHelpers.interopDefault(_gameoverPng);
@@ -550,9 +553,16 @@ var _platformPng = require("./images/platform.png");
 var _platformPngDefault = parcelHelpers.interopDefault(_platformPng);
 var _forgroundPng = require("./images/forground.png");
 var _forgroundPngDefault = parcelHelpers.interopDefault(_forgroundPng);
+//Title Screen
+var _buttonPng = require("./images/titlescreen/button.png");
+var _buttonPngDefault = parcelHelpers.interopDefault(_buttonPng);
+var _logoPng = require("./images/titlescreen/logo.png");
+var _logoPngDefault = parcelHelpers.interopDefault(_logoPng);
 //import music
 var _balladMp3 = require("url:./images/bgm/Ballad.mp3");
 var _balladMp3Default = parcelHelpers.interopDefault(_balladMp3);
+var _starrifiedMp3 = require("url:./images/bgm/Starrified.mp3");
+var _starrifiedMp3Default = parcelHelpers.interopDefault(_starrifiedMp3);
 var _vineBoomMp3 = require("url:./images/sfx/vine-boom.mp3");
 var _vineBoomMp3Default = parcelHelpers.interopDefault(_vineBoomMp3);
 class Game {
@@ -567,12 +577,34 @@ class Game {
             height: 450
         });
         document.body.appendChild(this.pixi.view);
-        this.loader = new _pixiJs.Loader().add('particleTexture', _sakuraPngDefault.default).add('spiderTexture', _spiderPngDefault.default).add('platformTexture', _platformPngDefault.default).add('seedTexture', _seedPngDefault.default).add('backgroundnightsceneTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('nightscenegroundTexture', _forgroundPngDefault.default).add('death', _gameoverPngDefault.default).add('sunnightsceneTexture', _sunnightscenePngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
+        this.loader = new _pixiJs.Loader().add('particleTexture', _sakuraPngDefault.default).add('spiderTexture', _spiderPngDefault.default).add('platformTexture', _platformPngDefault.default).add('seedTexture', _seedPngDefault.default).add('backgroundnightsceneTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('nightscenegroundTexture', _forgroundPngDefault.default).add('death', _gameoverPngDefault.default).add('sunnightsceneTexture', _sunnightscenePngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default)//Title Screen
+        .add('startButtonTexture', _buttonPngDefault.default).add('logoTexture', _logoPngDefault.default).add("titleMusic", _starrifiedMp3Default.default);
         this.loader.load(()=>this.loadCompleted()
         );
         this.engine = _matterJsDefault.default.Engine.create();
     }
     loadCompleted() {
+        const tilingSprite = new _pixiJs.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture, this.pixi.screen.width, this.pixi.screen.height);
+        tilingSprite.tint = Math.random() * 16777215;
+        this.pixi.stage.addChild(tilingSprite);
+        let count = 0;
+        this.pixi.ticker.add(()=>{
+            count += 0.005;
+            tilingSprite.tileScale.x = 1;
+            // tilingSprite.tileScale.y = 1 + Math.cos(count);
+            tilingSprite.tilePosition.x += -2;
+        // tilingSprite.tilePosition.y += 0;
+        });
+        let titleTheme = this.loader.resources["titleMusic"].data;
+        titleTheme.play();
+        let logo = new _pixiJs.Sprite(this.loader.resources["logoTexture"].texture);
+        logo.x = 600;
+        logo.tint = Math.random() * 16777215;
+        this.pixi.stage.addChild(logo);
+        this.startButton = new _startButton.StartButton(this.loader.resources["startButtonTexture"].texture, this);
+        this.pixi.stage.addChild(this.startButton);
+    }
+    loadStage() {
         this.engine = _matterJsDefault.default.Engine.create();
         let theme = this.loader.resources["music"].data;
         theme.play();
@@ -624,15 +656,7 @@ class Game {
     gameOver() {
         console.log("game over");
         this.pixi.stop();
-        this.gameOverButton = new _pixiJs.Sprite(this.loader.resources["death"].texture);
-        this.gameOverButton.width = 100;
-        this.gameOverButton.height = 100;
-        this.gameOverButton.x = 400;
-        this.gameOverButton.y = 200;
-        this.gameOverButton.interactive = true;
-        this.gameOverButton.buttonMode = true;
-        this.gameOverButton.on('pointerdown', ()=>this.resetGame()
-        );
+        this.gameOverButton = new _gameoverbutton.GameOverButton(this.loader.resources["death"].texture, this);
         this.pixi.stage.addChild(this.gameOverButton);
     }
     resetGame() {
@@ -667,7 +691,6 @@ class Game {
         this.pixi.stage.destroy;
         this.loadStage();
     }
-    loadStage() {}
     collision(sprite1, sprite2) {
         const bounds1 = sprite1.getBounds();
         const bounds2 = sprite2.getBounds();
@@ -676,7 +699,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./platform2":"35tee","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:./images/bgm/Ballad.mp3":"lTmzU","url:./images/sfx/vine-boom.mp3":"hs6F9"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./platform2":"35tee","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","./images/titlescreen/button.png":"2jFiB","./images/titlescreen/logo.png":"2X6jK","url:./images/bgm/Ballad.mp3":"lTmzU","url:./images/bgm/Starrified.mp3":"eg1D8","url:./images/sfx/vine-boom.mp3":"hs6F9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./startButton":"4ohVf","./gameoverbutton":"7S2JE"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -45420,12 +45443,70 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "platfo
 },{"./helpers/bundle-url":"lgJ39"}],"hD0fW":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "forground.daad521d.png" + "?" + Date.now();
 
+},{"./helpers/bundle-url":"lgJ39"}],"2jFiB":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "button.ba28ca2e.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"2X6jK":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "logo.c380b7bb.png" + "?" + Date.now();
+
 },{"./helpers/bundle-url":"lgJ39"}],"lTmzU":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad.30e05f90.mp3" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"eg1D8":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Starrified.e401a3c2.mp3" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"hs6F9":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.a00af07b.mp3" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}],"4ohVf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "StartButton", ()=>StartButton
+);
+var _pixiJs = require("pixi.js");
+class StartButton extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.game = game;
+        this.x = 500;
+        this.y = 300;
+        this.tint = Math.random() * 16777215;
+        this.interactive = true;
+        this.buttonMode = true;
+        this.on('pointerdown', ()=>this.buttonClicked()
+        );
+    }
+    buttonClicked() {
+        console.log("clicked start button!");
+        this.game.loadStage();
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7S2JE":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "GameOverButton", ()=>GameOverButton
+);
+var _pixiJs = require("pixi.js");
+class GameOverButton extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.game = game;
+        this.width = 100;
+        this.height = 100;
+        this.x = 400;
+        this.y = 200;
+        this.interactive = true;
+        this.buttonMode = true;
+        this.on('pointerdown', ()=>this.buttonClicked()
+        );
+    }
+    buttonClicked() {
+        console.log("clicked start button!");
+        this.game.resetGame();
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.901f85c2.js.map
