@@ -12,9 +12,13 @@ export class Player extends PIXI.Sprite {
 
   seed: Seed
   game: Game
+  moveTexture: PIXI.Texture
+  idleTexture: PIXI.Texture
 
-  constructor(texture: PIXI.Texture, game: Game) {
+  constructor(texture: PIXI.Texture, moveTexture: PIXI.Texture, game: Game) {
     super(texture);
+    this.moveTexture = moveTexture
+    this.idleTexture = texture
     this.game = game
     this.anchor.set(0.5)
 
@@ -108,11 +112,13 @@ export class Player extends PIXI.Sprite {
         case "ARROWLEFT":
         this.xspeed = -7;
         this.scale.x = -0.2
+        this.texture = this.moveTexture
         break;
       case "D":
         case "ARROWRIGHT":
         this.xspeed = 7;
         this.scale.x = 0.2
+        this.texture = this.moveTexture
         break;
       case "W":
       case "ARROWUP":
@@ -136,12 +142,14 @@ export class Player extends PIXI.Sprite {
         case "ARROWLEFT":
         case "ARROWRIGHT":
         this.xspeed = 0;
+        this.texture = this.idleTexture
         break;
       case "W":
       case "S":
         case "ARROWUP":
         case "ARROWDOWN":
         this.yspeed = 0;
+        this.texture = this.idleTexture
         break;
     }
   }

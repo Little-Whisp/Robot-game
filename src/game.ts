@@ -23,6 +23,7 @@ import sunnightsceneImage from "./images/sunnightscene.png"
 import seedImage from "./images/seed.png"
 import backgroundnightsceneImage from "./images/bgspring.png"
 import playerImage from "./images/didi_sprite.png"
+import playerImageMove from "./images/didi_sprite_move.png"
 import platformImage from "./images/platform.png"
 import nightscenegroundImage from "./images/forground.png"
 //Title Screen
@@ -65,6 +66,7 @@ export class Game {
             .add('seedTexture', seedImage)
             .add('backgroundnightsceneTexture', backgroundnightsceneImage)
             .add('playerTexture', playerImage)
+            .add('playerTextureMove', playerImageMove)
             .add('nightscenegroundTexture', nightscenegroundImage)
             .add('death', deathScreen)
             .add('sunnightsceneTexture', sunnightsceneImage)
@@ -126,7 +128,7 @@ export class Game {
         let sunnightscene = new PIXI.Sprite(this.loader.resources["sunnightsceneTexture"].texture!);
         this.pixi.stage.addChild(sunnightscene);
 
-        this.player = new Player(this.loader.resources["playerTexture"].texture!, this)
+        this.player = new Player(this.loader.resources["playerTexture"].texture!, this.loader.resources["playerTextureMove"].texture!, this)
         this.pixi.stage.addChild(this.player)
 
         let count = 0;
