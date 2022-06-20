@@ -1,7 +1,10 @@
 import * as PIXI from 'pixi.js'
+import { Player } from "./player"
 
 export class Seed extends PIXI.Sprite {
 public speed : number
+player: Player
+gotSeed = this.gotSeed
 
     constructor(texture: PIXI.Texture) {
         super(texture)

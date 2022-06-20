@@ -30,6 +30,7 @@ export class Game {
     private seeds: Seed[] = []
     private bubbles: Bubble[] = []
     private spiders: Spider[] = []
+
     private player: Player
     private spider: Spider
     private gameOverButton : PIXI.Sprite
@@ -42,7 +43,7 @@ export class Game {
     
 
     constructor() {
-        this.pixi = new PIXI.Application({ width: 1800, height: 450 })
+        this.pixi = new PIXI.Application({ width: 18000, height: 450 })
         document.body.appendChild(this.pixi.view)
         this.loader = new PIXI.Loader()
         this.loader.add('fishTexture', fishImage)
@@ -87,14 +88,14 @@ export class Game {
         })
 
         for (let i = 0; i < 40; i++) {
-            let seed = new Seed(this.loader.resources["fishTexture"].texture!)
-            this.pixi.stage.addChild(seed)
-            this.seeds.push(seed)
-
             let bubble = new Bubble(this.loader.resources["bubbleTexture"].texture!)
             this.pixi.stage.addChild(bubble)
             this.bubbles.push(bubble)
         }
+
+        let seed = new Seed(this.loader.resources["fishTexture"].texture!)
+        this.pixi.stage.addChild(seed)
+        this.seeds.push(seed)
 
         this.foreground = new Foreground(this.loader.resources["foreground"].texture!, this)
         this.pixi.stage.addChild(this.foreground)
@@ -120,8 +121,8 @@ export class Game {
         this.gameOverButton = new PIXI.Sprite(this.loader.resources["death"].texture!) // jouw eigen sprite hier
         this.gameOverButton.width = 350
         this.gameOverButton.height = 350
-        this.gameOverButton.x = 400
-        this.gameOverButton.y = 0
+        this.gameOverButton.x = this.player.x
+        this.gameOverButton.y = 100
         this.gameOverButton.interactive = true
         this.gameOverButton.buttonMode = true
         this.gameOverButton.on('pointerdown', () => this.resetGame())
@@ -144,6 +145,7 @@ export class Game {
         for (let seed of this.seeds) {
             if(this.collision(this.player, seed)){
                 seed.hitCapy()
+                this.player.hitseed()
                 this.score++
                 console.log(this.score)
             }
@@ -156,7 +158,9 @@ export class Game {
         for (let bubble of this.bubbles) {
             bubble.swim()
         }
+
         this.player.update()
+        console.log(this.player.gotSeed)
     }
 
     collision(sprite1:PIXI.Sprite, sprite2:PIXI.Sprite) {
