@@ -650,6 +650,7 @@ class Game {
             this.score++;
             console.log(this.score);
         }
+        //Shooting seed (Jany Code)      
         for (let spider of this.spiders){
             spider.swim();
             for (let s of this.seedscollect)if (this.collision(s, spider)) {
@@ -657,6 +658,7 @@ class Game {
                 spider.hit();
             }
         }
+        //Shooting seed (Jany Code)  
         for (let spider1 of this.spiders)if (this.collision(this.player, spider1)) this.gameOver();
         for (let seedcollect of this.seedscollect)seedcollect.update();
         for (let particale of this.particales)particale.move();
@@ -45125,6 +45127,7 @@ class Player extends _pixiJs.Sprite {
         switch(e.key.toUpperCase()){
             case "F":
                 this.shoot();
+                break;
             case "A":
             case "ARROWLEFT":
                 this.xspeed = -7;
@@ -45209,6 +45212,7 @@ class Spider extends _pixiJs.Sprite {
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
     }
+    //Shooting seed (Jany Code)
     hit() {
         this.x = window.innerWidth + 100;
     }
@@ -45222,6 +45226,7 @@ class Spider extends _pixiJs.Sprite {
             this.y = Math.random() * window.innerHeight;
         }
     }
+    //Shooting seed (Jany Code)
     update() {
         if (this.speed != 0) {
             _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
