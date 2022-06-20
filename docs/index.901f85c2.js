@@ -551,9 +551,9 @@ var _platformPngDefault = parcelHelpers.interopDefault(_platformPng);
 var _forgroundPng = require("./images/forground.png");
 var _forgroundPngDefault = parcelHelpers.interopDefault(_forgroundPng);
 //import music
-var _balladMp3 = require("url:./images/Ballad.mp3");
+var _balladMp3 = require("url:./images/bgm/Ballad.mp3");
 var _balladMp3Default = parcelHelpers.interopDefault(_balladMp3);
-var _vineBoomMp3 = require("url:./images/vine-boom.mp3");
+var _vineBoomMp3 = require("url:./images/sfx/vine-boom.mp3");
 var _vineBoomMp3Default = parcelHelpers.interopDefault(_vineBoomMp3);
 class Game {
     seeds = [];
@@ -663,6 +663,11 @@ class Game {
         this.player.update();
         console.log(this.player.gotSeed);
     }
+    destroyMenu() {
+        this.pixi.stage.destroy;
+        this.loadStage();
+    }
+    loadStage() {}
     collision(sprite1, sprite2) {
         const bounds1 = sprite1.getBounds();
         const bounds2 = sprite2.getBounds();
@@ -671,7 +676,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./platform2":"35tee"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./platform2":"35tee","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:./images/bgm/Ballad.mp3":"lTmzU","url:./images/sfx/vine-boom.mp3":"hs6F9"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -45188,10 +45193,6 @@ class Spider extends _pixiJs.Sprite {
         super(texture);
         this.game = game;
         this.anchor.set(0.5);
-        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
-        );
-        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
-        );
         this.x = 900;
         this.y = 368;
         this.scale.set(0.2);
@@ -45207,11 +45208,6 @@ class Spider extends _pixiJs.Sprite {
         };
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
-        );
-        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
-        );
-    // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
     }
     hit() {
         this.x = window.innerWidth + 100;
@@ -45246,34 +45242,6 @@ class Spider extends _pixiJs.Sprite {
             x: 0,
             y: 4
         });
-    }
-    onKeyDown(e) {
-        if (e.key === " " || e.key === "ArrowUp") {
-            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJsDefault.default.Body.applyForce(this.rigidBody, {
-                x: this.rigidBody.position.x,
-                y: this.rigidBody.position.y
-            }, {
-                x: 0,
-                y: -0.25
-            });
-        // this.jumpSound.play()
-        }
-        switch(e.key){
-            case "ArrowLeft":
-                this.speed = -5;
-                break;
-            case "ArrowRight":
-                this.speed = 5;
-                break;
-        }
-    }
-    onKeyUp(e) {
-        switch(e.key){
-            case "ArrowLeft":
-            case "ArrowRight":
-                this.speed = 0;
-                break;
-        }
     }
     resetPosition() {
         _matterJsDefault.default.Body.setPosition(this.rigidBody, {
@@ -45366,6 +45334,31 @@ class Platform extends _pixiJs.Sprite {
     }
 }
 
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"35tee":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Platform2", ()=>Platform2
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Platform2 extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.x = 1200;
+        this.y = 150;
+        this.anchor.set(0.5);
+        this.width = 200;
+        this.height = 100;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
+            isStatic: true
+        });
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+    }
+}
+
 },{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iBSOE":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "gameover.17d6241a.png" + "?" + Date.now();
 
@@ -45427,37 +45420,12 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "platfo
 },{"./helpers/bundle-url":"lgJ39"}],"hD0fW":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "forground.daad521d.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"mUBjp":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad.4b8a368a.mp3" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"lTmzU":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad.30e05f90.mp3" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"hs6F9":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.a00af07b.mp3" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"35tee":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Platform2", ()=>Platform2
-);
-var _pixiJs = require("pixi.js");
-var _matterJs = require("matter-js");
-var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
-class Platform2 extends _pixiJs.Sprite {
-    constructor(texture, game){
-        super(texture);
-        this.x = 1200;
-        this.y = 150;
-        this.anchor.set(0.5);
-        this.width = 200;
-        this.height = 100;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
-            isStatic: true
-        });
-        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-        this.x = this.rigidBody.position.x;
-        this.y = this.rigidBody.position.y;
-    }
-}
-
-},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
+},{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.901f85c2.js.map

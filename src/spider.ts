@@ -12,9 +12,6 @@ export class Spider extends PIXI.Sprite {
         this.game = game
         this.anchor.set(0.5)
 
-        window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
-        window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
-
         this.x =  900;
         this.y =  368;
 
@@ -32,12 +29,6 @@ export class Spider extends PIXI.Sprite {
         }
         this.rigidBody = Matter.Bodies.rectangle(600, 230, 75, 100, playerOptions)
         Matter.Composite.add(game.engine.world, this.rigidBody)
-        
-
-        window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
-        window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
-
-        // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
     }
 
     public hit() {
@@ -78,32 +69,6 @@ export class Spider extends PIXI.Sprite {
             Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
         }
         
-    }
-
-    onKeyDown(e: KeyboardEvent) {
-        if (e.key === " " || e.key === "ArrowUp") {
-            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {
-                Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: -0.25 })
-                // this.jumpSound.play()
-            }
-        }
-        switch (e.key) {
-            case "ArrowLeft":
-                this.speed = -5
-                break
-            case "ArrowRight":
-                this.speed = 5
-                break
-        }
-    }
-
-    onKeyUp(e: KeyboardEvent) {
-        switch (e.key) {
-            case "ArrowLeft":
-            case "ArrowRight":
-                this.speed = 0
-                break
-        }
     }
 
     resetPosition() {

@@ -24,8 +24,8 @@ import platformImage from "./images/platform.png"
 import nightscenegroundImage from "./images/forground.png"
 
 //import music
-import bgMusic from "url:./images/Ballad.mp3"
-import jumpSoundFile from "url:./images/vine-boom.mp3"
+import bgMusic from "url:./images/bgm/Ballad.mp3"
+import jumpSoundFile from "url:./images/sfx/vine-boom.mp3"
 
 export class Game {
 
@@ -205,6 +205,15 @@ export class Game {
 
         this.player.update()
         console.log(this.player.gotSeed)
+    }
+
+    destroyMenu() {
+        this.pixi.stage.destroy
+        this.loadStage()
+    }
+
+    loadStage() {
+        
     }
 
     collision(sprite1: PIXI.Sprite, sprite2: PIXI.Sprite) {
