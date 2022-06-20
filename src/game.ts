@@ -200,10 +200,6 @@ export class Game {
         this.pixi.start()
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 80cb678b25187c924167f7e6cd024c7f785311bf
 
     public update(delta: number) {
         Matter.Engine.update(this.engine, 1000 / 60)
