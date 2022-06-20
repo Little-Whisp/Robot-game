@@ -30,7 +30,7 @@ export class Spider extends PIXI.Sprite {
         this.rigidBody = Matter.Bodies.rectangle(600, 230, 75, 100, playerOptions)
         Matter.Composite.add(game.engine.world, this.rigidBody)
     }
-
+    //Shooting seed (Jany Code)
     public hit() {
         this.x = window.innerWidth + 100;
       }
@@ -46,6 +46,7 @@ export class Spider extends PIXI.Sprite {
           this.y = Math.random() * window.innerHeight;
         }
       }
+       //Shooting seed (Jany Code)
 
 
     update() {

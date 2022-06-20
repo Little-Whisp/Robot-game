@@ -103,6 +103,7 @@ export class Player extends PIXI.Sprite {
     switch (e.key.toUpperCase()) {
       case "F":
         this.shoot();
+        break;
       case "A":
         case "ARROWLEFT":
         this.xspeed = -7;

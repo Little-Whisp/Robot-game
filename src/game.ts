@@ -200,7 +200,10 @@ export class Game {
         this.pixi.start()
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 80cb678b25187c924167f7e6cd024c7f785311bf
 
     public update(delta: number) {
         Matter.Engine.update(this.engine, 1000 / 60)
@@ -214,6 +217,7 @@ export class Game {
             }
         }
 
+        //Shooting seed (Jany Code)      
         for (let spider of this.spiders) {
             spider.swim();
             for (let s of this.seedscollect) {
@@ -223,6 +227,7 @@ export class Game {
                 }
             }
         }
+        //Shooting seed (Jany Code)  
 
         for (let spider of this.spiders) {
             if (this.collision(this.player, spider)) {
