@@ -4,7 +4,6 @@ import { Seed } from "./seed";
 import * as Matter from 'matter-js';
 
 export class Player extends PIXI.Sprite {
-
   rigidBody: Matter.Body
   private xspeed = 0;
   private yspeed = 0;
@@ -38,7 +37,6 @@ export class Player extends PIXI.Sprite {
     }
     this.rigidBody = Matter.Bodies.rectangle(this.x, this.y, 75, 100, playerOptions)
     Matter.Composite.add(game.engine.world, this.rigidBody)
-
   }
 
   private jump() {
@@ -46,7 +44,6 @@ export class Player extends PIXI.Sprite {
       let jumpforce = -0.2
       Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: jumpforce })
     }
-
   }
 
   public hitseed(){
@@ -91,7 +88,6 @@ export class Player extends PIXI.Sprite {
     if (e.key === " " || e.key === "ArrowUp") {
       if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {
         Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: -0.25 })
-
       }
     }
 

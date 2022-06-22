@@ -39,7 +39,6 @@ export class Game {
 
     public engine: Matter.Engine;
     
-
     constructor() {
         this.pixi = new PIXI.Application({ width: 18000, height: 450 })
         document.body.appendChild(this.pixi.view)
