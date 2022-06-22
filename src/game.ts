@@ -16,7 +16,7 @@ import { StartButton } from './startButton'
 import { GameOverButton } from './gameoverbutton'
 
 //import images
-import deathScreen from "./images/gameover.png"
+import deathScreen from "./images/DEATH.png"
 import spiderImage from "./images/spider.png"
 import particleImage from "./images/sakura.png"
 import sunnightsceneImage from "./images/sunnightscene.png"
@@ -101,6 +101,7 @@ export class Game {
             tilingSprite.tilePosition.x += -2;
             // tilingSprite.tilePosition.y += 0;
         })
+        //Play Title Theme (Sasha)
         let titleTheme = this.loader.resources["titleMusic"].data!
         titleTheme.play()
 
@@ -117,9 +118,6 @@ export class Game {
     loadStage() {
         this.engine = Matter.Engine.create()
 
-        let theme = this.loader.resources["music"].data!
-        theme.play()
-
         const tilingSprite = new PIXI.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture!,
             this.pixi.screen.width,
             this.pixi.screen.height,
@@ -130,7 +128,9 @@ export class Game {
         let sunnightscene = new PIXI.Sprite(this.loader.resources["sunnightsceneTexture"].texture!);
         this.pixi.stage.addChild(sunnightscene);
 
-        this.player = new Player(this.loader.resources["playerTexture"].texture!, this.loader.resources["playerTextureMove"].texture!, this)
+        // Add jump sound (Sasha)
+        let jump = this.loader.resources["jumpsound"].data!
+        this.player = new Player(this.loader.resources["playerTexture"].texture!, this.loader.resources["playerTextureMove"].texture!, this, jump)
         this.pixi.stage.addChild(this.player)
 
         let count = 0;
@@ -189,6 +189,7 @@ export class Game {
         this.seedscollect = this.seedscollect.filter((s) => s !== seedcollect);
     }
 
+    //Game Over (Sasha)
     private gameOver() {
         console.log("game over")
         this.pixi.stop()
@@ -196,6 +197,7 @@ export class Game {
         this.pixi.stage.addChild(this.gameOverButton)
     }
 
+    //Reset Game for Game Over (Sasha)
     public resetGame() {
         // delete the game over button
         this.gameOverButton.destroy()
