@@ -78,7 +78,7 @@ export class Player extends PIXI.Sprite {
 
     if (this.rigidBody.position.y > 500) this.resetPosition()
 
-    //camera things jwz
+    //camera things Kevin
     // Character can't fall out of the game area
     this.x = this.clamp(this.x + this.xspeed, 0, mapwidth)
     this.y = this.clamp(this.y + this.yspeed, 0, mapheight)
@@ -95,7 +95,7 @@ export class Player extends PIXI.Sprite {
   }
 
   //Movement.
-  //Detect the keyboard.
+  //Detect the keyboard. Kevin/Luke
   onKeyDown(e: KeyboardEvent) {
     if (e.key === " " || e.key === "ArrowUp") {
       if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {

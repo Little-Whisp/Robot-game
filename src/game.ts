@@ -81,6 +81,7 @@ export class Game {
         this.engine = Matter.Engine.create()
     }
 
+    //Title Screen: Luke
     private loadCompleted() {
         const tilingSprite = new PIXI.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture!,
             this.pixi.screen.width,
@@ -112,6 +113,7 @@ export class Game {
         this.pixi.stage.addChild(this.startButton)
     }
 
+    //Load stage 1 
     loadStage() {
         this.engine = Matter.Engine.create()
 

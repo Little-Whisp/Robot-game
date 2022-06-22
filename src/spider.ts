@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js"
 import { Game } from "./Game"
 import Matter from 'matter-js'
 
+// Spider Class: Luke
 export class Spider extends PIXI.Sprite {
     rigidBody: Matter.Body
     speed: number = 0

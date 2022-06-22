@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js"
 import { Game } from "./Game"
 
+//GameOverButton ORIGINAL: SASHA, SEPERATE .TS: LUKE
 export class GameOverButton extends PIXI.Sprite {
     game: Game
 
