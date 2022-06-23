@@ -4,33 +4,22 @@ import Matter from 'matter-js'
 
 // Spider Class: Luke
 export class Spider extends PIXI.Sprite {
-    rigidBody: Matter.Body
-    speed: number = 0
-    game: Game
+    private rigidBody: Matter.Body;
+    
+// Spider movement: Kevin
+  constructor(texture: PIXI.Texture, game: Game) {
+    super(texture);
+    this.x = 900
+    this.y = 20
+    this.anchor.set(0.5);
+    this.scale.set(0.2)
 
-    constructor(texture: PIXI.Texture, game: Game) {
-        super(texture)
-        this.game = game
-        this.anchor.set(0.5)
+    this.rigidBody = Matter.Bodies.circle(100, 100, 30 , { friction: 0.00001, restitution: 0.5, density: 0.001});
+    Matter.Composite.add(game.engine.world, this.rigidBody);
 
-        this.x =  900;
-        this.y =  368;
-
-        this.scale.set(0.2)
-
-        const playerOptions: Matter.IBodyDefinition = {
-            density: 0.001,
-            friction: 0.7,
-            frictionStatic: 0,
-            frictionAir: 0.01,
-            restitution: 0.5,
-            inertia: Infinity,
-            inverseInertia: Infinity,
-            label: "Enemy"
-        }
-        this.rigidBody = Matter.Bodies.rectangle(600, 230, 75, 100, playerOptions)
-        Matter.Composite.add(game.engine.world, this.rigidBody)
-    }
+    this.reset()
+  }
+        
     //Shooting seed (Jany Code)
     public hit() {
         this.x = window.innerWidth + 100;
@@ -39,47 +28,18 @@ export class Spider extends PIXI.Sprite {
       public hitSpider() {
         console.log("hit spider");
       }
-
-      public swim() {
-        this.x -= this.speed;
-        if (this.x < -100) {
-          this.x = window.innerWidth + 100;
-          this.y = Math.random() * window.innerHeight;
-        }
-      }
-       //Shooting seed (Jany Code)
-
-
+    
     update() {
-        if (this.speed != 0) {
-            Matter.Body.setVelocity(this.rigidBody, { x: this.speed, y: this.rigidBody.velocity.y })
-        if (this.x > 1500) {
-            this.x = 0;
-            // this.jumpSound.play()
-        } else if (this.x < -100) {
-            this.x = 1500
-        } else if (this.y < -20) {
-            this.x = -100;
-            this.y =  250;
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+        Matter.Body.setVelocity(this.rigidBody, { x: -2, y: 5});
+    
+        if (this.rigidBody.position.x < -50) {
+          this.reset()
         }
-        this.x = this.rigidBody.position.x
-        this.y = this.rigidBody.position.y
-        this.rotation = this.rigidBody.angle
-
-        if (this.rigidBody.position.y > 1500) this.resetPosition()
-        } else if (this.speed == 0) {
-            Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 4 })
-        }
-        
     }
 
-    resetPosition() {
-        Matter.Body.setPosition(this.rigidBody, { x: 120, y: 30 })
-        Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 0 })
-        Matter.Body.setAngularVelocity(this.rigidBody, 0)
+    reset(){
+        Matter.Body.setPosition(this.rigidBody, { x: 600, y: 50 });
+      }
     }
-
-    beforeUnload() {
-
-    }
-}

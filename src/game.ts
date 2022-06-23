@@ -220,7 +220,7 @@ export class Game {
 
         //Shooting seed (Jany Code)      
         for (let spider of this.spiders) {
-            spider.swim();
+            spider.update();
             for (let s of this.seedscollect) {
                 if (this.collision(s, spider)) {
                     s.hit();
