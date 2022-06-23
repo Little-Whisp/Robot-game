@@ -11,17 +11,21 @@ export class Player extends PIXI.Sprite {
 
   seed: Seed
   game: Game
+  moveTexture: PIXI.Texture
+  idleTexture: PIXI.Texture
 
-  constructor(texture: PIXI.Texture, game: Game) {
+  constructor(texture: PIXI.Texture, moveTexture: PIXI.Texture, game: Game) {
     super(texture);
+    this.moveTexture = moveTexture
+    this.idleTexture = texture
     this.game = game
     this.anchor.set(0.5)
 
     window.addEventListener("keydown", (e: KeyboardEvent) => this.onKeyDown(e))
     window.addEventListener("keyup", (e: KeyboardEvent) => this.onKeyUp(e))
 
-    this.x = 100;
-    this.y = 345;
+    this.x = 200;
+    this.y = 300;
 
     this.scale.set(0.2)
 
@@ -35,8 +39,13 @@ export class Player extends PIXI.Sprite {
       inverseInertia: Infinity,
       label: "Player"
     }
-    this.rigidBody = Matter.Bodies.rectangle(this.x, this.y, 75, 100, playerOptions)
+    this.rigidBody = Matter.Bodies.rectangle(this.x, this.y, 75, 5, playerOptions)
     Matter.Composite.add(game.engine.world, this.rigidBody)
+  }
+
+  //Shooting seed (Jany code)
+  private shoot() {
+    this.game.shootSeedcollect(this.x, this.y);
   }
 
   private jump() {
@@ -45,7 +54,7 @@ export class Player extends PIXI.Sprite {
       Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: jumpforce })
     }
   }
-
+     //Shooting bubble (Jany code)
   public hitseed(){
     this.gotSeed = true;
 }
@@ -56,7 +65,7 @@ export class Player extends PIXI.Sprite {
     let centerx = 500
     let centery = 600
 
-    //movement things
+    //Movement 
     if (this.xspeed != 0) {
       Matter.Body.setVelocity(this.rigidBody, { x: this.xspeed, y: this.rigidBody.velocity.y })
     }
@@ -66,12 +75,12 @@ export class Player extends PIXI.Sprite {
 
     if (this.rigidBody.position.y > 500) this.resetPosition()
 
-    //camera things jwz
-    // beweeg het karakter over de map maar niet buiten beeld
+    //camera things Kevin
+    // Character can't fall out of the game area
     this.x = this.clamp(this.x + this.xspeed, 0, mapwidth)
     this.y = this.clamp(this.y + this.yspeed, 0, mapheight)
 
-    // centreer het hele level onder het karakter, gebruik clamp om bij de randen niet te scrollen
+    //Centre the level underneath the character.
     let mapx = this.clamp(this.x, centerx, mapwidth - 9000)
     let mapy = this.clamp(this.y, centery, mapheight - centery)
 
@@ -82,8 +91,8 @@ export class Player extends PIXI.Sprite {
     return Math.min(Math.max(num, min), max)
   }
 
-  //movement thingies
-  //detecteerd de keyboard indrukkings
+  //Movement.
+  //Detect the keyboard. Kevin/Luke
   onKeyDown(e: KeyboardEvent) {
     if (e.key === " " || e.key === "ArrowUp") {
       if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) {
@@ -92,15 +101,20 @@ export class Player extends PIXI.Sprite {
     }
 
     switch (e.key.toUpperCase()) {
+      case "F":
+        this.shoot();
+        break;
       case "A":
         case "ARROWLEFT":
         this.xspeed = -7;
         this.scale.x = -0.2
+        this.texture = this.moveTexture
         break;
       case "D":
         case "ARROWRIGHT":
         this.xspeed = 7;
         this.scale.x = 0.2
+        this.texture = this.moveTexture
         break;
       case "W":
       case "ARROWUP":
@@ -114,7 +128,7 @@ export class Player extends PIXI.Sprite {
     }
   }
 
-  //detecteerd de keyboard loslatings
+  //Detect the keyboard
   onKeyUp(e: KeyboardEvent) {
     switch (e.key.toUpperCase()) {
       case " ":
@@ -124,17 +138,19 @@ export class Player extends PIXI.Sprite {
         case "ARROWLEFT":
         case "ARROWRIGHT":
         this.xspeed = 0;
+        this.texture = this.idleTexture
         break;
       case "W":
       case "S":
         case "ARROWUP":
         case "ARROWDOWN":
         this.yspeed = 0;
+        this.texture = this.idleTexture
         break;
     }
   }
 
-  //al gaat het fout herstart hij je op de originele plek
+  //If it doesn't work, it will restart from it's original location.
   resetPosition() {
     Matter.Body.setPosition(this.rigidBody, { x: 100, y: 345 })
     Matter.Body.setVelocity(this.rigidBody, { x: 0, y: 0 })

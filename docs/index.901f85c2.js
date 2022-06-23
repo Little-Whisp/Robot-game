@@ -524,35 +524,54 @@ var _matterJs = require("matter-js");
 var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
 //import classes
 var _seed = require("./seed");
-var _bubble = require("./bubble");
+var _particale = require("./particale");
 var _player = require("./player");
 var _spider = require("./spider");
-var _foreground = require("./foreground");
+var _nightsceneground = require("./nightsceneground");
+var _seedcollect = require("./seedcollect");
 var _platform = require("./platform");
+var _platform2 = require("./platform2");
+//Title screen
+var _startButton = require("./startButton");
+var _gameoverbutton = require("./gameoverbutton");
 //import images
-var _lostseedPng = require("./images/lostseed.png");
-var _lostseedPngDefault = parcelHelpers.interopDefault(_lostseedPng);
 var _gameoverPng = require("./images/gameover.png");
 var _gameoverPngDefault = parcelHelpers.interopDefault(_gameoverPng);
 var _spiderPng = require("./images/spider.png");
 var _spiderPngDefault = parcelHelpers.interopDefault(_spiderPng);
 var _sakuraPng = require("./images/sakura.png");
 var _sakuraPngDefault = parcelHelpers.interopDefault(_sakuraPng);
+var _sunnightscenePng = require("./images/sunnightscene.png");
+var _sunnightscenePngDefault = parcelHelpers.interopDefault(_sunnightscenePng);
+var _seedPng = require("./images/seed.png");
+var _seedPngDefault = parcelHelpers.interopDefault(_seedPng);
 var _bgspringPng = require("./images/bgspring.png");
 var _bgspringPngDefault = parcelHelpers.interopDefault(_bgspringPng);
 var _didiSpritePng = require("./images/didi_sprite.png");
 var _didiSpritePngDefault = parcelHelpers.interopDefault(_didiSpritePng);
-var _foregroundPng = require("./images/foreground.png");
-var _foregroundPngDefault = parcelHelpers.interopDefault(_foregroundPng);
+var _didiSpriteMovePng = require("./images/didi_sprite_move.png");
+var _didiSpriteMovePngDefault = parcelHelpers.interopDefault(_didiSpriteMovePng);
+var _platformPng = require("./images/platform.png");
+var _platformPngDefault = parcelHelpers.interopDefault(_platformPng);
+var _forgroundPng = require("./images/forground.png");
+var _forgroundPngDefault = parcelHelpers.interopDefault(_forgroundPng);
+//Title Screen
+var _buttonPng = require("./images/titlescreen/button.png");
+var _buttonPngDefault = parcelHelpers.interopDefault(_buttonPng);
+var _logoPng = require("./images/titlescreen/logo.png");
+var _logoPngDefault = parcelHelpers.interopDefault(_logoPng);
 //import music
-var _balladMp3 = require("url:./images/Ballad.mp3");
+var _balladMp3 = require("url:./images/bgm/Ballad.mp3");
 var _balladMp3Default = parcelHelpers.interopDefault(_balladMp3);
-var _vineBoomMp3 = require("url:./images/vine-boom.mp3");
+var _starrifiedMp3 = require("url:./images/bgm/Starrified.mp3");
+var _starrifiedMp3Default = parcelHelpers.interopDefault(_starrifiedMp3);
+var _vineBoomMp3 = require("url:./images/sfx/vine-boom.mp3");
 var _vineBoomMp3Default = parcelHelpers.interopDefault(_vineBoomMp3);
 class Game {
     seeds = [];
-    bubbles = [];
+    particales = [];
     spiders = [];
+    seedscollect = [];
     score = 0;
     constructor(){
         this.pixi = new _pixiJs.Application({
@@ -560,19 +579,44 @@ class Game {
             height: 450
         });
         document.body.appendChild(this.pixi.view);
-        this.loader = new _pixiJs.Loader();
-        this.loader.add('fishTexture', _lostseedPngDefault.default).add('bubbleTexture', _sakuraPngDefault.default).add('spiderTexture', _spiderPngDefault.default).add('waterTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('foreground', _foregroundPngDefault.default).add('death', _gameoverPngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default);
+        this.loader = new _pixiJs.Loader().add('particleTexture', _sakuraPngDefault.default).add('spiderTexture', _spiderPngDefault.default).add('platformTexture', _platformPngDefault.default).add('seedTexture', _seedPngDefault.default).add('backgroundnightsceneTexture', _bgspringPngDefault.default).add('playerTexture', _didiSpritePngDefault.default).add('playerTextureMove', _didiSpriteMovePngDefault.default).add('nightscenegroundTexture', _forgroundPngDefault.default).add('death', _gameoverPngDefault.default).add('sunnightsceneTexture', _sunnightscenePngDefault.default).add("music", _balladMp3Default.default).add("jumpsound", _vineBoomMp3Default.default)//Title Screen
+        .add('startButtonTexture', _buttonPngDefault.default).add('logoTexture', _logoPngDefault.default).add("titleMusic", _starrifiedMp3Default.default);
         this.loader.load(()=>this.loadCompleted()
         );
         this.engine = _matterJsDefault.default.Engine.create();
     }
+    //Title Screen: Luke
     loadCompleted() {
+        const tilingSprite = new _pixiJs.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture, this.pixi.screen.width, this.pixi.screen.height);
+        tilingSprite.tint = Math.random() * 16777215;
+        this.pixi.stage.addChild(tilingSprite);
+        let count = 0;
+        this.pixi.ticker.add(()=>{
+            count += 0.005;
+            tilingSprite.tileScale.x = 1;
+            // tilingSprite.tileScale.y = 1 + Math.cos(count);
+            tilingSprite.tilePosition.x += -2;
+        // tilingSprite.tilePosition.y += 0;
+        });
+        let titleTheme = this.loader.resources["titleMusic"].data;
+        titleTheme.play();
+        let logo = new _pixiJs.Sprite(this.loader.resources["logoTexture"].texture);
+        logo.x = 600;
+        logo.tint = Math.random() * 16777215;
+        this.pixi.stage.addChild(logo);
+        this.startButton = new _startButton.StartButton(this.loader.resources["startButtonTexture"].texture, this);
+        this.pixi.stage.addChild(this.startButton);
+    }
+    //Load stage 1 
+    loadStage() {
         this.engine = _matterJsDefault.default.Engine.create();
         let theme = this.loader.resources["music"].data;
         theme.play();
-        const tilingSprite = new _pixiJs.TilingSprite(this.loader.resources["waterTexture"].texture, this.pixi.screen.width, this.pixi.screen.height);
+        const tilingSprite = new _pixiJs.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture, this.pixi.screen.width, this.pixi.screen.height);
         this.pixi.stage.addChild(tilingSprite);
-        this.player = new _player.Player(this.loader.resources["playerTexture"].texture, this);
+        let sunnightscene = new _pixiJs.Sprite(this.loader.resources["sunnightsceneTexture"].texture);
+        this.pixi.stage.addChild(sunnightscene);
+        this.player = new _player.Player(this.loader.resources["playerTexture"].texture, this.loader.resources["playerTextureMove"].texture, this);
         this.pixi.stage.addChild(this.player);
         let count = 0;
         this.pixi.ticker.add(()=>{
@@ -583,57 +627,75 @@ class Game {
         // tilingSprite.tilePosition.y += 0;
         });
         for(let i = 0; i < 40; i++){
-            let bubble = new _bubble.Bubble(this.loader.resources["bubbleTexture"].texture);
-            this.pixi.stage.addChild(bubble);
-            this.bubbles.push(bubble);
+            let particale = new _particale.Particale(this.loader.resources["particleTexture"].texture);
+            this.pixi.stage.addChild(particale);
+            this.particales.push(particale);
         }
-        let seed = new _seed.Seed(this.loader.resources["fishTexture"].texture);
+        let seed = new _seed.Seed(this.loader.resources["seedTexture"].texture);
         this.pixi.stage.addChild(seed);
         this.seeds.push(seed);
-        this.foreground = new _foreground.Foreground(this.loader.resources["foreground"].texture, this);
-        this.pixi.stage.addChild(this.foreground);
-        this.platform = new _platform.Platform(this.loader.resources["foreground"].texture, this);
+        this.nightsceneground = new _nightsceneground.Nightsceneground(this.loader.resources["nightscenegroundTexture"].texture, this);
+        this.pixi.stage.addChild(this.nightsceneground);
+        this.platform = new _platform.Platform(this.loader.resources["platformTexture"].texture, this);
         this.pixi.stage.addChild(this.platform);
+        this.platform2 = new _platform2.Platform2(this.loader.resources["platformTexture"].texture, this);
+        this.pixi.stage.addChild(this.platform2);
         let spider = new _spider.Spider(this.loader.resources["spiderTexture"].texture, this);
         this.pixi.stage.addChild(spider);
         this.spiders.push(spider);
         this.pixi.ticker.add((delta)=>this.update(delta)
         );
     }
+    //Shooting seed (Jany code)
+    shootSeedcollect(bx, by) {
+        let seedcollect = new _seedcollect.Seedcollect(bx, by, this, this.loader.resources["seedTexture"].texture);
+        this.pixi.stage.addChild(seedcollect);
+        this.seedscollect.push(seedcollect);
+    }
+    //Delete seed when hit (Jany code)
+    removeSeedcollect(seedcollect) {
+        this.seedscollect = this.seedscollect.filter((s)=>s !== seedcollect
+        );
+    }
     gameOver() {
         console.log("game over");
         this.pixi.stop();
-        this.gameOverButton = new _pixiJs.Sprite(this.loader.resources["death"].texture) // jouw eigen sprite hier
-        ;
-        this.gameOverButton.width = 350;
-        this.gameOverButton.height = 350;
-        this.gameOverButton.x = this.player.x;
-        this.gameOverButton.y = 100;
-        this.gameOverButton.interactive = true;
-        this.gameOverButton.buttonMode = true;
-        this.gameOverButton.on('pointerdown', ()=>this.resetGame()
-        );
+        this.gameOverButton = new _gameoverbutton.GameOverButton(this.loader.resources["death"].texture, this);
         this.pixi.stage.addChild(this.gameOverButton);
     }
     resetGame() {
-        // verwijder de game over button
+        // delete the game over button
         this.gameOverButton.destroy();
-        // herstart pixi
+        // restart pixi
         this.player.resetPosition();
         this.pixi.start();
     }
     update(delta) {
         _matterJsDefault.default.Engine.update(this.engine, 1000 / 60);
         for (let seed of this.seeds)if (this.collision(this.player, seed)) {
-            seed.hitCapy();
+            seed.hitDidi();
             this.player.hitseed();
             this.score++;
             console.log(this.score);
         }
-        for (let spider of this.spiders)if (this.collision(this.player, spider)) this.gameOver();
-        for (let bubble of this.bubbles)bubble.swim();
+        //Shooting seed (Jany Code)      
+        for (let spider of this.spiders){
+            spider.swim();
+            for (let s of this.seedscollect)if (this.collision(s, spider)) {
+                s.hit();
+                spider.hit();
+            }
+        }
+        //Shooting seed (Jany Code)  
+        for (let spider1 of this.spiders)if (this.collision(this.player, spider1)) this.gameOver();
+        for (let seedcollect of this.seedscollect)seedcollect.update();
+        for (let particale of this.particales)particale.move();
         this.player.update();
         console.log(this.player.gotSeed);
+    }
+    destroyMenu() {
+        this.pixi.stage.destroy;
+        this.loadStage();
     }
     collision(sprite1, sprite2) {
         const bounds1 = sprite1.getBounds();
@@ -643,7 +705,7 @@ class Game {
 }
 new Game();
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./bubble":"iOWvL","./player":"6OTSH","./spider":"lt4qm","./foreground":"7EEYf","./platform":"lNgaF","./images/lostseed.png":"i5ObV","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/foreground.png":"6TC8P","url:./images/Ballad.mp3":"mUBjp","url:./images/vine-boom.mp3":"loAs9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","./seed":"iu1lN","./particale":"39nex","./player":"6OTSH","./spider":"lt4qm","./nightsceneground":"6gsDW","./seedcollect":"2zJp2","./platform":"lNgaF","./platform2":"35tee","./startButton":"4ohVf","./gameoverbutton":"7S2JE","./images/gameover.png":"iBSOE","./images/spider.png":"ceHb0","./images/sakura.png":"8JSvj","./images/sunnightscene.png":"aziwe","./images/seed.png":"7udCm","./images/bgspring.png":"aPYeH","./images/didi_sprite.png":"6teKZ","./images/didi_sprite_move.png":"ec6UO","./images/platform.png":"i4VxX","./images/forground.png":"hD0fW","./images/titlescreen/button.png":"2jFiB","./images/titlescreen/logo.png":"2X6jK","url:./images/bgm/Ballad.mp3":"lTmzU","url:./images/bgm/Starrified.mp3":"eg1D8","url:./images/sfx/vine-boom.mp3":"hs6F9","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -44966,18 +45028,18 @@ class Seed extends _pixiJs.Sprite {
         if (this.x > 1900) this.x = -100;
         this.x -= this.speed;
     }
-    hitCapy() {
+    hitDidi() {
         this.x = 10000000;
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iOWvL":[function(require,module,exports) {
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"39nex":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Bubble", ()=>Bubble
+parcelHelpers.export(exports, "Particale", ()=>Particale
 );
 var _pixiJs = require("pixi.js");
-class Bubble extends _pixiJs.Sprite {
+class Particale extends _pixiJs.Sprite {
     constructor(texture){
         super(texture);
         this.speed = Math.random() * 5;
@@ -44986,7 +45048,7 @@ class Bubble extends _pixiJs.Sprite {
         this.anchor.set(0.5);
         this.scale.set(Math.random() * 0.03);
     }
-    swim() {
+    move() {
         this.x *= 1;
         this.tint = 16777215;
         this.rotation -= 0.01;
@@ -45007,16 +45069,18 @@ class Player extends _pixiJs.Sprite {
     xspeed = 0;
     yspeed = 0;
     gotSeed = false;
-    constructor(texture, game){
+    constructor(texture, moveTexture, game){
         super(texture);
+        this.moveTexture = moveTexture;
+        this.idleTexture = texture;
         this.game = game;
         this.anchor.set(0.5);
         window.addEventListener("keydown", (e)=>this.onKeyDown(e)
         );
         window.addEventListener("keyup", (e)=>this.onKeyUp(e)
         );
-        this.x = 100;
-        this.y = 345;
+        this.x = 200;
+        this.y = 300;
         this.scale.set(0.2);
         const playerOptions = {
             density: 0.001,
@@ -45028,8 +45092,12 @@ class Player extends _pixiJs.Sprite {
             inverseInertia: Infinity,
             label: "Player"
         };
-        this.rigidBody = _matterJs.Bodies.rectangle(this.x, this.y, 75, 100, playerOptions);
+        this.rigidBody = _matterJs.Bodies.rectangle(this.x, this.y, 75, 5, playerOptions);
         _matterJs.Composite.add(game.engine.world, this.rigidBody);
+    }
+    //Shooting seed (Jany code)
+    shoot() {
+        this.game.shootSeedcollect(this.x, this.y);
     }
     jump() {
         if (this.y >= 300) {
@@ -45043,6 +45111,7 @@ class Player extends _pixiJs.Sprite {
             });
         }
     }
+    //Shooting bubble (Jany code)
     hitseed() {
         this.gotSeed = true;
     }
@@ -45051,7 +45120,7 @@ class Player extends _pixiJs.Sprite {
         let mapheight = 600;
         let centerx = 500;
         let centery = 600;
-        //movement things
+        //Movement 
         if (this.xspeed != 0) _matterJs.Body.setVelocity(this.rigidBody, {
             x: this.xspeed,
             y: this.rigidBody.velocity.y
@@ -45060,11 +45129,11 @@ class Player extends _pixiJs.Sprite {
         this.y = this.rigidBody.position.y;
         this.rotation = this.rigidBody.angle;
         if (this.rigidBody.position.y > 500) this.resetPosition();
-        //camera things jwz
-        // beweeg het karakter over de map maar niet buiten beeld
+        //camera things Kevin
+        // Character can't fall out of the game area
         this.x = this.clamp(this.x + this.xspeed, 0, mapwidth);
         this.y = this.clamp(this.y + this.yspeed, 0, mapheight);
-        // centreer het hele level onder het karakter, gebruik clamp om bij de randen niet te scrollen
+        //Centre the level underneath the character.
         let mapx = this.clamp(this.x, centerx, mapwidth - 9000);
         let mapy = this.clamp(this.y, centery, mapheight - centery);
         this.game.pixi.stage.pivot.set(mapx - 500, mapy);
@@ -45072,8 +45141,8 @@ class Player extends _pixiJs.Sprite {
     clamp(num, min, max) {
         return Math.min(Math.max(num, min), max);
     }
-    //movement thingies
-    //detecteerd de keyboard indrukkings
+    //Movement.
+    //Detect the keyboard. Kevin/Luke
     onKeyDown(e) {
         if (e.key === " " || e.key === "ArrowUp") {
             if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJs.Body.applyForce(this.rigidBody, {
@@ -45085,15 +45154,20 @@ class Player extends _pixiJs.Sprite {
             });
         }
         switch(e.key.toUpperCase()){
+            case "F":
+                this.shoot();
+                break;
             case "A":
             case "ARROWLEFT":
                 this.xspeed = -7;
                 this.scale.x = -0.2;
+                this.texture = this.moveTexture;
                 break;
             case "D":
             case "ARROWRIGHT":
                 this.xspeed = 7;
                 this.scale.x = 0.2;
+                this.texture = this.moveTexture;
                 break;
             case "W":
             case "ARROWUP":
@@ -45106,7 +45180,7 @@ class Player extends _pixiJs.Sprite {
                 break;
         }
     }
-    //detecteerd de keyboard loslatings
+    //Detect the keyboard
     onKeyUp(e) {
         switch(e.key.toUpperCase()){
             case " ":
@@ -45116,16 +45190,18 @@ class Player extends _pixiJs.Sprite {
             case "ARROWLEFT":
             case "ARROWRIGHT":
                 this.xspeed = 0;
+                this.texture = this.idleTexture;
                 break;
             case "W":
             case "S":
             case "ARROWUP":
             case "ARROWDOWN":
                 this.yspeed = 0;
+                this.texture = this.idleTexture;
                 break;
         }
     }
-    //al gaat het fout herstart hij je op de originele plek
+    //If it doesn't work, it will restart from it's original location.
     resetPosition() {
         _matterJs.Body.setPosition(this.rigidBody, {
             x: 100,
@@ -45142,6 +45218,7 @@ class Player extends _pixiJs.Sprite {
 },{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lt4qm":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+// Spider Class: Luke
 parcelHelpers.export(exports, "Spider", ()=>Spider
 );
 var _pixiJs = require("pixi.js");
@@ -45153,10 +45230,6 @@ class Spider extends _pixiJs.Sprite {
         super(texture);
         this.game = game;
         this.anchor.set(0.5);
-        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
-        );
-        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
-        );
         this.x = 900;
         this.y = 368;
         this.scale.set(0.2);
@@ -45172,12 +45245,22 @@ class Spider extends _pixiJs.Sprite {
         };
         this.rigidBody = _matterJsDefault.default.Bodies.rectangle(600, 230, 75, 100, playerOptions);
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
-        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
-        );
-        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
-        );
-    // this.jumpSound = game.pixi.loader.resources["jumpsound"].data!
     }
+    //Shooting seed (Jany Code)
+    hit() {
+        this.x = window.innerWidth + 100;
+    }
+    hitSpider() {
+        console.log("hit spider");
+    }
+    swim() {
+        this.x -= this.speed;
+        if (this.x < -100) {
+            this.x = window.innerWidth + 100;
+            this.y = Math.random() * window.innerHeight;
+        }
+    }
+    //Shooting seed (Jany Code)
     update() {
         if (this.speed != 0) {
             _matterJsDefault.default.Body.setVelocity(this.rigidBody, {
@@ -45199,34 +45282,6 @@ class Spider extends _pixiJs.Sprite {
             y: 4
         });
     }
-    onKeyDown(e) {
-        if (e.key === " " || e.key === "ArrowUp") {
-            if (this.rigidBody.velocity.y > -0.4 && this.rigidBody.velocity.y < 0.4) _matterJsDefault.default.Body.applyForce(this.rigidBody, {
-                x: this.rigidBody.position.x,
-                y: this.rigidBody.position.y
-            }, {
-                x: 0,
-                y: -0.25
-            });
-        // this.jumpSound.play()
-        }
-        switch(e.key){
-            case "ArrowLeft":
-                this.speed = -5;
-                break;
-            case "ArrowRight":
-                this.speed = 5;
-                break;
-        }
-    }
-    onKeyUp(e) {
-        switch(e.key){
-            case "ArrowLeft":
-            case "ArrowRight":
-                this.speed = 0;
-                break;
-        }
-    }
     resetPosition() {
         _matterJsDefault.default.Body.setPosition(this.rigidBody, {
             x: 120,
@@ -45241,15 +45296,15 @@ class Spider extends _pixiJs.Sprite {
     beforeUnload() {}
 }
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7EEYf":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6gsDW":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Foreground", ()=>Foreground
+parcelHelpers.export(exports, "Nightsceneground", ()=>Nightsceneground
 );
 var _pixiJs = require("pixi.js");
 var _matterJs = require("matter-js");
 var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
-class Foreground extends _pixiJs.Sprite {
+class Nightsceneground extends _pixiJs.Sprite {
     constructor(texture, game){
         super(texture);
         this.x = 100;
@@ -45257,7 +45312,7 @@ class Foreground extends _pixiJs.Sprite {
         this.anchor.set(0.5);
         this.width = 18000;
         this.height = 200;
-        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(-500, 500, 18000, 200, {
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(6000, 350, 18000, -10, {
             isStatic: true
         });
         _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
@@ -45266,7 +45321,36 @@ class Foreground extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lNgaF":[function(require,module,exports) {
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2zJp2":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Seedcollect", ()=>Seedcollect
+) //Shooting seed (Jany code)
+;
+//Shooting seed (Jany code)
+var _pixiJs = require("pixi.js");
+class Seedcollect extends _pixiJs.Sprite {
+    constructor(bx, by, mygame, texture){
+        super(texture);
+        this.scale.set(0.7);
+        this.x = bx + 20;
+        this.y = by + 5;
+        this.mygame = mygame;
+    }
+    hit() {
+        this.mygame.removeSeedcollect(this);
+        this.destroy();
+    }
+    update() {
+        this.x += 10;
+        if (this.x > window.innerWidth) {
+            this.mygame.removeSeedcollect(this);
+            this.destroy();
+        }
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lNgaF":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Platform", ()=>Platform
@@ -45291,8 +45375,84 @@ class Platform extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i5ObV":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "lostseed.1ecb0028.png" + "?" + Date.now();
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"35tee":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Platform2", ()=>Platform2
+);
+var _pixiJs = require("pixi.js");
+var _matterJs = require("matter-js");
+var _matterJsDefault = parcelHelpers.interopDefault(_matterJs);
+class Platform2 extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.x = 1200;
+        this.y = 150;
+        this.anchor.set(0.5);
+        this.width = 200;
+        this.height = 100;
+        this.rigidBody = _matterJsDefault.default.Bodies.rectangle(this.x, this.y, this.width, this.height, {
+            isStatic: true
+        });
+        _matterJsDefault.default.Composite.add(game.engine.world, this.rigidBody);
+        this.x = this.rigidBody.position.x;
+        this.y = this.rigidBody.position.y;
+    }
+}
+
+},{"pixi.js":"dsYej","matter-js":"2oYKU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4ohVf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+//StartButton class: Luke
+parcelHelpers.export(exports, "StartButton", ()=>StartButton
+);
+var _pixiJs = require("pixi.js");
+class StartButton extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.game = game;
+        this.x = 500;
+        this.y = 300;
+        this.tint = Math.random() * 16777215;
+        this.interactive = true;
+        this.buttonMode = true;
+        this.on('pointerdown', ()=>this.buttonClicked()
+        );
+    }
+    buttonClicked() {
+        console.log("clicked start button!");
+        this.game.loadStage();
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7S2JE":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+//GameOverButton ORIGINAL: SASHA, SEPERATE .TS: LUKE
+parcelHelpers.export(exports, "GameOverButton", ()=>GameOverButton
+);
+var _pixiJs = require("pixi.js");
+class GameOverButton extends _pixiJs.Sprite {
+    constructor(texture, game){
+        super(texture);
+        this.game = game;
+        this.width = 100;
+        this.height = 100;
+        this.x = 400;
+        this.y = 200;
+        this.interactive = true;
+        this.buttonMode = true;
+        this.on('pointerdown', ()=>this.buttonClicked()
+        );
+    }
+    buttonClicked() {
+        console.log("clicked start button!");
+        this.game.resetGame();
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iBSOE":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "gameover.17d6241a.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
 "use strict";
@@ -45328,14 +45488,17 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"iBSOE":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "gameover.17d6241a.png" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"ceHb0":[function(require,module,exports) {
+},{}],"ceHb0":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "spider.d316874d.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"8JSvj":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sakura.920dd15c.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"aziwe":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "sunnightscene.d8d7096d.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"7udCm":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "seed.92ba4cfb.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"aPYeH":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspring.c03f841b.png" + "?" + Date.now();
@@ -45343,14 +45506,29 @@ module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "bgspri
 },{"./helpers/bundle-url":"lgJ39"}],"6teKZ":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "didi_sprite.98bad492.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"6TC8P":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "foreground.725088f5.png" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"ec6UO":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "didi_sprite_move.5a3814ae.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"mUBjp":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad.4b8a368a.mp3" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"i4VxX":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "platform.033ab567.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"loAs9":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.8e8de597.mp3" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"hD0fW":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "forground.daad521d.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"2jFiB":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "button.ba28ca2e.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"2X6jK":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "logo.c380b7bb.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"lTmzU":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Ballad.30e05f90.mp3" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"eg1D8":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "Starrified.e401a3c2.mp3" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}],"hs6F9":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('emE5o') + "vine-boom.a00af07b.mp3" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}]},["fpRtI","edeGs"], "edeGs", "parcelRequirea0e5")
 

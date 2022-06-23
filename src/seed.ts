@@ -25,7 +25,7 @@ gotSeed = this.gotSeed
             }
         this.x -= this.speed
     }
-    public hitCapy(){
+    public hitDidi(){
         this.x = 10000000
    }
 }

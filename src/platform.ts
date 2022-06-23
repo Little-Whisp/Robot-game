@@ -21,3 +21,4 @@ export class Platform extends PIXI.Sprite {
     this.y = this.rigidBody.position.y;
   }
 }
+

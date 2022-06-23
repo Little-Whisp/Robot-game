@@ -4,37 +4,53 @@ import Matter from 'matter-js'
 
 //import classes
 import { Seed } from './seed'
-import { Bubble } from './bubble'
+import { Particale } from './particale'
 import { Player } from './player'
 import { Spider } from './spider'
-import { Foreground } from "./foreground"
+import { Nightsceneground } from "./nightsceneground"
+import { Seedcollect } from "./seedcollect"
 import { Platform } from "./platform"
+import { Platform2 } from "./platform2"
+//Title screen
+import { StartButton } from './startButton'
+import { GameOverButton } from './gameoverbutton'
 
 //import images
-import fishImage from "./images/lostseed.png"
 import deathScreen from "./images/gameover.png"
 import spiderImage from "./images/spider.png"
-import bubbleImage from "./images/sakura.png"
-import waterImage from "./images/bgspring.png"
+import particleImage from "./images/sakura.png"
+import sunnightsceneImage from "./images/sunnightscene.png"
+import seedImage from "./images/seed.png"
+import backgroundnightsceneImage from "./images/bgspring.png"
 import playerImage from "./images/didi_sprite.png"
-import foregroundImage from "./images/foreground.png"
+import playerImageMove from "./images/didi_sprite_move.png"
+import platformImage from "./images/platform.png"
+import nightscenegroundImage from "./images/forground.png"
+//Title Screen
+import startButton from "./images/titlescreen/button.png"
+import logo from "./images/titlescreen/logo.png"
 
 //import music
-import bgMusic from "url:./images/Ballad.mp3" 
-import jumpSoundFile from "url:./images/vine-boom.mp3"
+import bgMusic from "url:./images/bgm/Ballad.mp3"
+import titleMusic from "url:./images/bgm/Starrified.mp3"
+import jumpSoundFile from "url:./images/sfx/vine-boom.mp3"
 
 export class Game {
+
+
     public pixi: PIXI.Application // canvas element in de html file
     private loader: PIXI.Loader
     private seeds: Seed[] = []
-    private bubbles: Bubble[] = []
+    private particales: Particale[] = []
     private spiders: Spider[] = []
+    private seedscollect: Seedcollect[] = []
 
     private player: Player
-    private spider: Spider
-    private gameOverButton : PIXI.Sprite
-    private foreground: Foreground;
+    public startButton: StartButton
+    private gameOverButton: GameOverButton
+    private nightsceneground: Nightsceneground;
     private platform: Platform;
+    private platform2: Platform2;
     private score = 0
 
     public engine: Matter.Engine;
@@ -43,33 +59,77 @@ export class Game {
         this.pixi = new PIXI.Application({ width: 18000, height: 450 })
         document.body.appendChild(this.pixi.view)
         this.loader = new PIXI.Loader()
-        this.loader.add('fishTexture', fishImage)
-            .add('bubbleTexture', bubbleImage)
+            .add('particleTexture', particleImage)
             .add('spiderTexture', spiderImage)
-            .add('waterTexture', waterImage)
+            .add('platformTexture', platformImage)
+            .add('seedTexture', seedImage)
+            .add('backgroundnightsceneTexture', backgroundnightsceneImage)
             .add('playerTexture', playerImage)
-            .add('foreground', foregroundImage)
+            .add('playerTextureMove', playerImageMove)
+            .add('nightscenegroundTexture', nightscenegroundImage)
             .add('death', deathScreen)
+            .add('sunnightsceneTexture', sunnightsceneImage)
             .add("music", bgMusic)
             .add("jumpsound", jumpSoundFile)
+            //Title Screen
+            .add('startButtonTexture', startButton)
+            .add('logoTexture', logo)
+            .add("titleMusic", titleMusic)
         this.loader.load(() => this.loadCompleted())
 
         this.engine = Matter.Engine.create()
     }
 
+    //Title Screen: Luke
     private loadCompleted() {
+        const tilingSprite = new PIXI.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture!,
+            this.pixi.screen.width,
+            this.pixi.screen.height,
+        );
+        tilingSprite.tint = Math.random() * 0xFFFFFF
+        this.pixi.stage.addChild(tilingSprite);
+
+        let count = 0;
+
+        this.pixi.ticker.add(() => {
+            count += 0.005;
+
+            tilingSprite.tileScale.x = 1;
+            // tilingSprite.tileScale.y = 1 + Math.cos(count);
+
+            tilingSprite.tilePosition.x += -2;
+            // tilingSprite.tilePosition.y += 0;
+        })
+        let titleTheme = this.loader.resources["titleMusic"].data!
+        titleTheme.play()
+
+        let logo = new PIXI.Sprite(this.loader.resources["logoTexture"].texture!);
+        logo.x = 600
+        logo.tint = Math.random() * 0xFFFFFF
+        this.pixi.stage.addChild(logo);
+
+        this.startButton = new StartButton(this.loader.resources["startButtonTexture"].texture!, this)
+        this.pixi.stage.addChild(this.startButton)
+    }
+
+    //Load stage 1 
+    loadStage() {
         this.engine = Matter.Engine.create()
 
         let theme = this.loader.resources["music"].data!
         theme.play()
 
-        const tilingSprite = new PIXI.TilingSprite(this.loader.resources["waterTexture"].texture!,
+        const tilingSprite = new PIXI.TilingSprite(this.loader.resources["backgroundnightsceneTexture"].texture!,
             this.pixi.screen.width,
             this.pixi.screen.height,
         );
         this.pixi.stage.addChild(tilingSprite);
 
-        this.player = new Player(this.loader.resources["playerTexture"].texture!, this)
+
+        let sunnightscene = new PIXI.Sprite(this.loader.resources["sunnightsceneTexture"].texture!);
+        this.pixi.stage.addChild(sunnightscene);
+
+        this.player = new Player(this.loader.resources["playerTexture"].texture!, this.loader.resources["playerTextureMove"].texture!, this)
         this.pixi.stage.addChild(this.player)
 
         let count = 0;
@@ -85,20 +145,25 @@ export class Game {
         })
 
         for (let i = 0; i < 40; i++) {
-            let bubble = new Bubble(this.loader.resources["bubbleTexture"].texture!)
-            this.pixi.stage.addChild(bubble)
-            this.bubbles.push(bubble)
+            let particale = new Particale(this.loader.resources["particleTexture"].texture!)
+            this.pixi.stage.addChild(particale)
+            this.particales.push(particale)
         }
 
-        let seed = new Seed(this.loader.resources["fishTexture"].texture!)
+        let seed = new Seed(this.loader.resources["seedTexture"].texture!)
         this.pixi.stage.addChild(seed)
         this.seeds.push(seed)
 
-        this.foreground = new Foreground(this.loader.resources["foreground"].texture!, this)
-        this.pixi.stage.addChild(this.foreground)
+        this.nightsceneground = new Nightsceneground(this.loader.resources["nightscenegroundTexture"].texture!, this)
+        this.pixi.stage.addChild(this.nightsceneground)
 
-        this.platform = new Platform(this.loader.resources["foreground"].texture!, this)
+        this.platform = new Platform(this.loader.resources["platformTexture"].texture!, this)
         this.pixi.stage.addChild(this.platform)
+
+        this.platform2 = new Platform2(this.loader.resources["platformTexture"].texture!, this)
+        this.pixi.stage.addChild(this.platform2)
+
+
 
         let spider = new Spider(this.loader.resources["spiderTexture"].texture!, this)
         this.pixi.stage.addChild(spider)
@@ -107,55 +172,86 @@ export class Game {
         this.pixi.ticker.add((delta: number) => this.update(delta))
     }
 
-    private gameOver(){
+    //Shooting seed (Jany code)
+    public shootSeedcollect(bx: number, by: number) {
+        let seedcollect = new Seedcollect(
+            bx,
+            by,
+            this,
+            this.loader.resources["seedTexture"].texture!
+        );
+        this.pixi.stage.addChild(seedcollect);
+        this.seedscollect.push(seedcollect);
+    }
+    //Delete seed when hit (Jany code)
+    public removeSeedcollect(seedcollect: Seedcollect) {
+        this.seedscollect = this.seedscollect.filter((s) => s !== seedcollect);
+    }
+
+    private gameOver() {
         console.log("game over")
         this.pixi.stop()
-        this.gameOverButton = new PIXI.Sprite(this.loader.resources["death"].texture!) // jouw eigen sprite hier
-        this.gameOverButton.width = 350
-        this.gameOverButton.height = 350
-        this.gameOverButton.x = this.player.x
-        this.gameOverButton.y = 100
-        this.gameOverButton.interactive = true
-        this.gameOverButton.buttonMode = true
-        this.gameOverButton.on('pointerdown', () => this.resetGame())
-        
-
+        this.gameOverButton = new GameOverButton(this.loader.resources["death"].texture!, this)
         this.pixi.stage.addChild(this.gameOverButton)
     }
 
-    private resetGame(){
-        // verwijder de game over button
-        this.gameOverButton.destroy() 
-        // herstart pixi
+    public resetGame() {
+        // delete the game over button
+        this.gameOverButton.destroy()
+        // restart pixi
         this.player.resetPosition()
         this.pixi.start()
     }
+
 
     public update(delta: number) {
         Matter.Engine.update(this.engine, 1000 / 60)
 
         for (let seed of this.seeds) {
-            if(this.collision(this.player, seed)){
-                seed.hitCapy()
+            if (this.collision(this.player, seed)) {
+                seed.hitDidi()
                 this.player.hitseed()
                 this.score++
                 console.log(this.score)
             }
         }
+
+        //Shooting seed (Jany Code)      
         for (let spider of this.spiders) {
-            if(this.collision(this.player, spider)){
+            spider.swim();
+            for (let s of this.seedscollect) {
+                if (this.collision(s, spider)) {
+                    s.hit();
+                    spider.hit();
+                }
+            }
+        }
+        //Shooting seed (Jany Code)  
+
+        for (let spider of this.spiders) {
+            if (this.collision(this.player, spider)) {
                 this.gameOver()
             }
         }
-        for (let bubble of this.bubbles) {
-            bubble.swim()
+        for (let seedcollect of this.seedscollect) {
+            seedcollect.update()
+        }
+
+        for (let particale of this.particales) {
+            particale.move()
         }
 
         this.player.update()
         console.log(this.player.gotSeed)
     }
 
-    collision(sprite1:PIXI.Sprite, sprite2:PIXI.Sprite) {
+    destroyMenu() {
+        this.pixi.stage.destroy
+        this.loadStage()
+    }
+
+
+    collision(sprite1: PIXI.Sprite, sprite2: PIXI.Sprite) {
         const bounds1 = sprite1.getBounds()
         const bounds2 = sprite2.getBounds()
 
