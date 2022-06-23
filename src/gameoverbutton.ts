@@ -20,7 +20,6 @@ export class GameOverButton extends PIXI.Sprite {
     }
 
     buttonClicked() {
-        console.log("clicked start button!")
         this.game.resetGame()
     }
 }

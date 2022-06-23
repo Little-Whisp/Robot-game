@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import Matter from "matter-js";
 import { Game } from "./game";
 
+//Platform 2 (Sasha)
 export class Platform2 extends PIXI.Sprite {
     private rigidBody: Matter.Body;
   
