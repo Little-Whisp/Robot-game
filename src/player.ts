@@ -9,16 +9,17 @@ export class Player extends PIXI.Sprite {
   private xspeed = 0;
   private yspeed = 0;
   public gotSeed = false;
-
+  private jumpsound: HTMLAudioElement
   seed: Seed
   game: Game
   moveTexture: PIXI.Texture
   idleTexture: PIXI.Texture
 
-  constructor(texture: PIXI.Texture, moveTexture: PIXI.Texture, game: Game) {
+  constructor(texture: PIXI.Texture, moveTexture: PIXI.Texture, game: Game, jump: HTMLAudioElement) {
     super(texture);
     this.moveTexture = moveTexture
     this.idleTexture = texture
+   this.jumpsound = jump
     this.game = game
     this.anchor.set(0.5)
 
@@ -40,7 +41,7 @@ export class Player extends PIXI.Sprite {
       inverseInertia: Infinity,
       label: "Player"
     }
-    this.rigidBody = Matter.Bodies.rectangle(this.x, this.y, 75, 5, playerOptions)
+    this.rigidBody = Matter.Bodies.rectangle(this.x, this.y, 75, 50, playerOptions)
     Matter.Composite.add(game.engine.world, this.rigidBody)
 
   }
@@ -50,8 +51,11 @@ export class Player extends PIXI.Sprite {
     this.game.shootSeedcollect(this.x, this.y);
   }
 
+
   private jump() {
-    if (this.y >= 300) {
+    //Play Jump sound on Jump (Sasha)
+    this.jumpsound.play()
+    if (this.y >= 30) {
       let jumpforce = -0.2
       Matter.Body.applyForce(this.rigidBody, { x: this.rigidBody.position.x, y: this.rigidBody.position.y }, { x: 0, y: jumpforce })
     }
