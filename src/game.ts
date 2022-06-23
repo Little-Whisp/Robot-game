@@ -113,7 +113,7 @@ export class Game {
         this.pixi.stage.addChild(this.startButton)
     }
 
-    //Load stage 1 
+    //Load stage 1: Luke seperate fn
     loadStage() {
         this.engine = Matter.Engine.create()
 
